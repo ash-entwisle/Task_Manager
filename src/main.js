@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron');
+const url = require('url')
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -14,7 +15,7 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.loadFile(path.join(__dirname, './view/basewin/basewin.html'));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
