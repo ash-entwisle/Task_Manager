@@ -1,3 +1,4 @@
+const logger = require('./lib/logger/logger')
 const { app, BrowserWindow } = require('electron');
 const url = require('url')
 const path = require('path');
@@ -5,10 +6,12 @@ const path = require('path');
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
+  logger("app-quit")
 }
 
 const createWindow = () => {
   // Create the browser window.
+  logger("window created")
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -31,6 +34,7 @@ app.on('ready', createWindow);
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    
     app.quit();
   }
 });
