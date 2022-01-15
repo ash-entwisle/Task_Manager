@@ -3,21 +3,26 @@ const path = require('path')
 
 function logger(action) {
 
-    let date_time = new Date();
-    let date = ("0" + date_time.getDate()).slice(-2);
-    let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
-    let year = date_time.getFullYear();
-    let hours = date_time.getHours();
-    let minutes = date_time.getMinutes();
-    let seconds = date_time.getSeconds();
-    let time = (year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds);
-    let data = ('[' + time + ']: ' + action)
+    let rawdate = new Date();
+    let formdate = (
+        dt.getFullYear() + '-' +
+        ('0' + (rawdate.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + rawdate.getDate()).slice(-2) + ' ' +
+        ('0' + rawdate.getHours()).slice(-2) + ':' +
+        ('0' + rawdate.getMinutes()).slice(-2) + ':' +
+        ('0' + rawdate.getSeconds()).slice(-2)
+    );
+    let data = (
+        '[' + formdate + ']: ' + action
+    )
+
+
     
     console.log(data)
-    fs.appendFile('logger.log', data, err => {
+    fs.appendFile('logger.log', ('\n' + data), err => {
         if (err) {
-            console.error(err)
-        }})
+            console.error(err);
+        }});
 
     }
 
