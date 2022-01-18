@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-function logger(action) {
+function logger(action, locale) {
 
     let rawdate = new Date();
     let formdate = (
@@ -13,7 +13,7 @@ function logger(action) {
         ('0' + rawdate.getSeconds()).slice(-2)
     );
     let data = (
-        '[' + formdate + ']: ' + action + ' (' + ')'
+        '[' + formdate + ']: ' + action + ' (' + locale + ')'
     )
 
     
