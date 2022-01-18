@@ -18,7 +18,7 @@ function logger(action) {
 
     
     console.log(data)
-    fs.appendFile('logger.log', ('\n' + data), err => {
+    fs.appendFile('./src/data/log/logger.log', ('\n' + data), err => {
         if (err) {
             console.error(err);
         }});
