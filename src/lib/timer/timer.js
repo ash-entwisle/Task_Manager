@@ -1,7 +1,10 @@
 
 
 function timenow() {
-    let rawtime = 
+    let rawtime = new Date()
+    return { 
+        
+    }
 }
 
 function timeoffset(offset) {

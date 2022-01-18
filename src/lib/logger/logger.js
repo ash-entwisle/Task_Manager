@@ -5,7 +5,7 @@ function logger(action) {
 
     let rawdate = new Date();
     let formdate = (
-        dt.getFullYear() + '-' +
+        rawdate.getFullYear() + '-' +
         ('0' + (rawdate.getMonth() + 1)).slice(-2) + '-' +
         ('0' + rawdate.getDate()).slice(-2) + ' ' +
         ('0' + rawdate.getHours()).slice(-2) + ':' +
@@ -13,9 +13,8 @@ function logger(action) {
         ('0' + rawdate.getSeconds()).slice(-2)
     );
     let data = (
-        '[' + formdate + ']: ' + action
+        '[' + formdate + ']: ' + action + ' (' + ')'
     )
-
 
     
     console.log(data)
