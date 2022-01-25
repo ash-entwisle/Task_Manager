@@ -1,28 +1,20 @@
 const fs = require('fs')
 const path = require('path')
+const time = require('../timer/timer')
+
 
 function logger(action, locale) {
 
-    let rawdate = new Date();
-    let formdate = (
-        rawdate.getFullYear() + '-' +
-        ('0' + (rawdate.getMonth() + 1)).slice(-2) + '-' +
-        ('0' + rawdate.getDate()).slice(-2) + ' ' +
-        ('0' + rawdate.getHours()).slice(-2) + ':' +
-        ('0' + rawdate.getMinutes()).slice(-2) + ':' +
-        ('0' + rawdate.getSeconds()).slice(-2)
-    );
-    let data = (
-        '[' + formdate + ']: ' + action + ' (' + locale + ')'
-    )
+    let data = (`[${time.getFormatDateTime()}]: ${action} (${locale})`)
+    let logpath = "./src/data/logs/" + time.getFormatDate() + ".log"
 
-    
+    try {
+        fs.appendFileSync(logpath, ('\n' + data));
+    } catch (err) {
+        console.error(err);
+    };
+        
     console.log(data)
-    fs.appendFile('./src/data/log/logger.log', ('\n' + data), err => {
-        if (err) {
-            console.error(err);
-        }});
-
-    }
+    };
 
 module.exports = logger

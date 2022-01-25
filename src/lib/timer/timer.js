@@ -1,12 +1,43 @@
 
 
-function timenow() {
-    let rawtime = new Date()
-    return { 
-        
-    }
+function getFormatDateTime() {
+    let rawdate = new Date()
+    let formatdatetime = (
+        rawdate.getFullYear() + '-' +
+        ('0' + (rawdate.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + rawdate.getDate()).slice(-2) + '_' +
+        ('0' + rawdate.getHours()).slice(-2) + ':' +
+        ('0' + rawdate.getMinutes()).slice(-2) + ':' +
+        ('0' + rawdate.getSeconds()).slice(-2)
+    );
+    return formatdatetime
 }
 
-function timeoffset(offset) {
-
+function getFormatTime() {
+    let rawdate = new Date()
+    let formattime = (
+        ('0' + rawdate.getHours()).slice(-2) + ':' +
+        ('0' + rawdate.getMinutes()).slice(-2) + ':' +
+        ('0' + rawdate.getSeconds()).slice(-2)
+    );
+    return formattime
 }
+
+function getFormatDate() {
+    let rawdate = new Date()
+    let formatdate = (
+        rawdate.getFullYear() + '-' +
+        ('0' + (rawdate.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + rawdate.getDate()).slice(-2)
+    );
+    return formatdate
+}
+
+
+module.exports = { getFormatDate, getFormatTime, getFormatDateTime }
+
+
+
+
+
+
