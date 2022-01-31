@@ -13,7 +13,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
-  logger("window created", locale)
+  logger("window created", locale)  
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -45,3 +45,4 @@ app.on('activate', () => {
 app.on('quit', () => {
   logger("app-quit", locale)
 });
+
