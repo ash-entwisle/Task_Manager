@@ -7,7 +7,7 @@ const locale = "JSON"
 function exportJSON (obj) {
     try {
         let data = JSON.parse(obj)
-        let logpath = "./src/data/exports/" + obj + ".log"
+        let logpath = "./src/data/exports/" + obj.heading + ".log"
 
         try {
             fs.appendFileSync(logpath, ('\n' + data));
@@ -15,7 +15,7 @@ function exportJSON (obj) {
             console.error(err);
         };
     } catch (error) {
-        logger("error in exporting object as json", locale)
+        logger("erroneous json passed", locale)
         console.error(error)
     }
 
@@ -37,5 +37,17 @@ function importJSON (targetPath) {
 
 json data held in an object. 
 object will export to .
+[
+    "heading": "some random task"
+    "completed": False
+    "overdue": False
+    "dueDate": "yyyy/mm/dd"
+    "setDate": "yyyy/mm/dd"
+    "dueTime": "hh:mm:ss"
+    "description": "complete NEA"
+    "links": [a, b, c]
+
+
+]
 
 */
