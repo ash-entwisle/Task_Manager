@@ -1,5 +1,6 @@
 const logger = require('./lib/logger/logger');
 let locale = "main";
+const os-util = require("os-utils")
 const getSplash = require('./lib/splasher/splasher')
 const { app, BrowserWindow } = require('electron');
 const url = require('url')
