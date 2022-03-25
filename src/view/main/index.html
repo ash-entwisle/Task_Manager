@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Task List</title>
+    <link rel="stylesheet" href="basewin.css">
+  </head>
+  <body>
+    <div class="sidebar" id="sidebar">
+
+
+    </div>
+    <div class="main" id="main">
+      <div class="list" id="list">
+        <script type="text/javascript">
+          const splasher = require("../../lib/splasher/splasher.js")
+          const getSplash = splasher.getSplash()
+          
+          var btn = document.getElementById("testbtn")
+          btn.addEventListener("click", test)
+
+          function test(){
+            alert(getSplash())
+          }
+
+        </script>
+        <button type="button" id="testbtn" onclick="test()">click</button>
+      </div>
+      <div class="btns" id="btns">
+        <div class="btn-newtask" id="btn-newtask">
+
+
+        </div>
+        <div class="btn-deltask" id="btn-deltask">
+
+        </div>
+      </div>
+    </div>
+    <div class="form" id="form">
+      <div class="form-text" id="form-text">
+
+
+      </div>
+      <div class="form-buttons" id="form-buttons">
+
+
+      </div>
+    </div>
+
+  </body>
+</html>
