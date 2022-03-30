@@ -1,6 +1,5 @@
-
 const fs = require('fs');
-const logger = require('../logger/logger')
+const logger = require('../logger/logger').log
 let locale = "splasher"
 
 function getSplash() {
@@ -17,4 +16,4 @@ function getSplash() {
     }
 }
 
-module.exports = getSplash
+module.exports = { getSplash }

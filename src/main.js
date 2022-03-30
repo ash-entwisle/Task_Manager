@@ -1,7 +1,7 @@
-const logger = require('./lib/logger/logger');
+const log = require('./lib/logger/logger').log;
 let locale = "main";
 const os = require("os-utils")
-const getSplash = require('./lib/splasher/splasher')
+//const getSplash = require('./lib/splasher/splasher')
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const url = require('url')
 const path = require('path');
@@ -14,11 +14,14 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
-  logger("window created", locale)  
+  log("window created", locale)  
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: {nodeIntegration: true},
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    },
     autoHideMenuBar: true
   });
   mainWindow.loadFile(path.join(__dirname, './view/main/index.html'));
@@ -34,10 +37,12 @@ app.on('ready', createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
+  log("all windows closed", locale)
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
+
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
@@ -46,6 +51,13 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+// logs when app quits
+
+app.on("quit", () => {
+  log("app quit", locale)
+})
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

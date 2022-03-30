@@ -10,41 +10,73 @@
 
 
     </div>
-    <div class="main" id="main">
-      <div class="list" id="list">
-        <script type="text/javascript">
-          const splasher = require("../../lib/splasher/splasher.js")
-          const getSplash = splasher.getSplash()
-          
-          var btn = document.getElementById("testbtn")
-          btn.addEventListener("click", test)
 
-          function test(){
-            alert(getSplash())
-          }
+
+    <div class="cntr-tsklist" id="cntr-tsklist">
+      <div class="list" id="list">
+        <script type="module" defer src="script.js">
 
         </script>
-        <button type="button" id="testbtn" onclick="test()">click</button>
+        <button id="testbtn">click</button>
       </div>
       <div class="btns" id="btns">
-        <div class="btn-newtask" id="btn-newtask">
+        
+        <button class="btn-newtask" id="btn-newtask">New Task</button>
+        <button class="btn-imptask" id="btn-imptask">Import Task</button>
 
-
-        </div>
-        <div class="btn-deltask" id="btn-deltask">
-
-        </div>
       </div>
     </div>
-    <div class="form" id="form">
-      <div class="form-text" id="form-text">
 
 
-      </div>
-      <div class="form-buttons" id="form-buttons">
+    <div class="cntr-form" id="cntr-form">
+      <form>
 
+        <div class="form-title" id="form-title">
+          <label>Enter Title</label>
+          <input class="inp-title" id="inp-title" type="text">
+        </div>
 
-      </div>
+        <div class="form-for" id="form-for">
+          <label>For</label>
+          <input class="inp-for" id="inp-for" type="text">
+        </div>
+
+        <div class="form-due" id="form-due">
+          <label>Due Date</label>
+          <input class="inp-duedate" id="inp-duedate" type="datetime">
+        </div>
+
+        <div class="form-desc" id="form-desc">
+          <label>Description</label>
+          <input class="inp-desc" id="inp-desc" type="text">
+        </div>
+
+        <div class="form-submit" id="for,-submit">
+          <input class="inp-title" id="inp-title" type="submit">
+        </div>
+
+      </form>
+      <script id="src-submit">
+
+        const electron = require('electron');
+        const { ipcRenderer } = electron;
+
+        // Form Submitter
+        /*
+        document.querySelector('form').addEventListener('submit', submitForm);
+
+        function submitForm(e) {
+          e.preventDefault();
+          const item = document.querySelector('#item');
+          //console.log(ipcRenderer);
+          //ipcRenderer.send('item:add', item);
+          const formData = new FormData(item)
+          for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+          }
+        }
+        */
+      </script>
     </div>
 
   </body>

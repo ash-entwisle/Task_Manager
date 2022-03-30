@@ -3,7 +3,7 @@ const path = require('path')
 const time = require('../timer/timer')
 
 
-function logger(action, locale) {
+function log(action, locale) {
 
     let data = (`[${time.getFormatDateTime()}]: ${action} (${locale})`)
     let logpath = "./src/data/logs/" + time.getFormatDate() + ".log"
@@ -17,4 +17,4 @@ function logger(action, locale) {
     console.log(data)
     };
 
-module.exports = logger
+module.exports = { log }
