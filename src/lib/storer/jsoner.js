@@ -39,13 +39,11 @@ json data held in an object.
 object will export to .
 [
     "heading": "some random task"
-    "completed": False
-    "overdue": False
+    "for": "some random person"
+    "description": "complete NEA"
     "dueDate": "yyyy/mm/dd"
     "setDate": "yyyy/mm/dd"
-    "dueTime": "hh:mm:ss"
-    "description": "complete NEA"
-    "links": [a, b, c]
+    "completed": False
 
 
 ]

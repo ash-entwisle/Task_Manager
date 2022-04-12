@@ -33,8 +33,16 @@ function getFormatDate() {
     return formatdate
 }
 
+function timestamp() {
+    let rawdate = new Date()
+    let timestamp = (`
+        ${rawdate.getFullYear()}${rawdate.getMonth()}${rawdate.getDate()}${rawdate.getHours()}${rawdate.getMinutes()}${rawdate.getSeconds()}
+    `)
+    return timestamp
+}
 
-module.exports = { getFormatDate, getFormatTime, getFormatDateTime }
+
+module.exports = { getFormatDate, getFormatTime, getFormatDateTime , timestamp }
 
 
 

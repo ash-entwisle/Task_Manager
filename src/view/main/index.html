@@ -4,98 +4,97 @@
     <meta charset="UTF-8">
     <title>Task List</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <div class="sidebar" id="sidebar">
+    <navbar>
+      <script type="module" defer src="script.js"></script>
 
-
-    </div>
-
-
-    <div class="cntr-tsklist" id="cntr-tsklist">
-      <div class="list" id="list">
-        <script type="module" defer src="script.js">
-
-        </script>
-        <button id="testbtn">
-
+      <div class="rmmc" id="rmmc">
+        <button class="btn" id="btn-closeapp">
+          <svg id="ico-closeapp" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px"
+            preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+            style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m7.5 7.5l6 6m0-6l-6 6" />
+          </svg>
+        </button>
+        <button class="btn" id="btn-minmax">
+          <svg id="ico-minmax" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px"
+            preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+            style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+              d="M5.5 3.5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2z" />
+          </svg>
+        </button>
+        <button class="btn" id="btn-reduce">
+          <svg id="ico-reduce" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px"
+            preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+            style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M5.5 10.5h10" />
+          </svg>
         </button>
       </div>
-      <div class="btns" id="btns">
-
-        <button class="btn-addtskmnu" id="btn-addtskmnu">
-          <img src="https://api.iconify.design/system-uicons/button-add.svg">
-        </button>
-        <div class="menu-newtask" id="menu-newtask">
-          <button class="btn-newtask" id="btn-newtask">New Task</button>
-          <button class="btn-imptask" id="btn-imptask">Import Task</button>
-        </div>
-        
-        <button class="btn-togglefltrs" id="btn-togglefltrs">
-          <img src="https://api.iconify.design/system-uicons/filter.svg">
-        </button>
-        <div class="menu-filter" id="menu-filter">
-          <button class="btn-toggledone" id="btn-toggledone">Show Completed Tasks</button>
-          <button class="btn-toggleovrdue" id="btn-toggleovrdue">Show Overdue Tasks</button>
-        </div>
-        
-        <button class="btn-closeapp" id="btn-closeapp">
-          <img src="https://api.iconify.design/ep/close.svg">
-        </button>
+      <div class="icon" id="icon">
+        <svg class="ico-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+          width="25px" height="25px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+          style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"d="m12.5 3.5l-4 14m-2-5l-4-4l4-4m8 12l4-4l-4-4" />
+        </svg>
       </div>
-    </div>
+    </navbar>
 
+    <content>
+      <div class="cntr-tasklist" id="cntr-tasklist">
 
-    <div class="cntr-form" id="cntr-form">
-      <form>
+        <div class="task-list" id="{task.heading}">
+          <button class="task-accordion">
+            <div class="task-heading">
+              {task.heading}
+            </div>
+            <div class="task-foron">
+              For: {task.for} On: {task.on}
+            </div>
+          </button>
+          <div class="task-content">
+            <p>{task.content}</p>
+            <div class="task-btns">
+              <button class="task-btn" id="btn-edit">
+                <span>Edit</span>
+              </button>
+              <button class="task-btn" id="btn-delete">
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
 
-        <div class="form-title" id="form-title">
-          <label>Enter Title</label>
-          <input class="inp-title" id="inp-title" type="text">
         </div>
+      </div>
 
-        <div class="form-for" id="form-for">
-          <label>For</label>
-          <input class="inp-for" id="inp-for" type="text">
-        </div>
+      <div class="cntr-taskinp" id="cntr-taskinp">
+        <form id="taskinp">
+          <div id="taskinp-name">
+            <label>Task Name</label>
+            <input class="inp-taskname" id="inp-taskname" type="text" placeholder="task title...">
+          </div>
+          <div id="taskinp-for">
+            <label>For</label>
+            <input class="inp-taskfor" id="inp-taskfor" type="text" placeholder="for...">
+          <div id="taskinp-date">
+            <label>Due Date</label>
+            <input class="inp-taskdate" id="inp-taskdate" type="date" placeholder="dd-mm-yyyy">
+          </div> 
+          <div id="taskinp-desc">
+            <label>Description</label>
+            <textarea class="inp-taskdesc" id="inp-taskdesc" placeholder="task description..."></textarea>
+          </div>
+          <div id="taskinp-submit">
+            <input class="inp-tasksubmit" id="inp-tasksubmit" type="submit">
+          </div>
+        </form>
+      </div>
 
-        <div class="form-due" id="form-due">
-          <label>Due Date</label>
-          <input class="inp-duedate" id="inp-duedate" type="datetime">
-        </div>
 
-        <div class="form-desc" id="form-desc">
-          <label>Description</label>
-          <input class="inp-desc" id="inp-desc" type="text">
-        </div>
-
-        <div class="form-submit" id="for,-submit">
-          <input class="inp-title" id="inp-title" type="submit">
-        </div>
-
-      </form>
-      <script id="src-submit">
-
-        const electron = require('electron');
-        const { ipcRenderer } = electron;
-
-        // Form Submitter
-        /*
-        document.querySelector('form').addEventListener('submit', submitForm);
-
-        function submitForm(e) {
-          e.preventDefault();
-          const item = document.querySelector('#item');
-          //console.log(ipcRenderer);
-          //ipcRenderer.send('item:add', item);
-          const formData = new FormData(item)
-          for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-          }
-        }
-        */
-      </script>
-    </div>
+    </content>
 
   </body>
 </html>

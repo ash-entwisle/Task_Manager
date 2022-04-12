@@ -45,8 +45,11 @@
     }
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.0.1",
     "os-utils": "^0.0.14",
+    "request": "^2.88.2",
     "sqlite3": "^4.2.0"
   },
   "devDependencies": {
