@@ -42,6 +42,25 @@ minmax.addEventListener("click", () => {
     ipcRenderer.send("app-minmax")
 })
 
+// code to handle accordion functionality 
+
+function accordion(e) {
+    log("accordion", locale)
+    let panel = e.target.nextElementSibling;
+    if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+    } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+}
+
+
+
+// delete the corresponding task when the delete button is clicked
+
+
+
+
 // submit form event
 
 submitForm.addEventListener("click", (event) => {
@@ -104,59 +123,76 @@ ipcRenderer.on("add-task", (e, data) => {
     log(`add-task: ${data.heading}`, locale)
     let taskList = document.getElementById("cntr-tasklist");
     // append task to taskList with the class of task-accordion and the id of data.heading
-    taskList.innerHTML += `<div class="task-item" id="${data.heading}">
-        <button class="task-accordion">
-            <div class="task-heading">
-              ${data.heading}
+    taskList.innerHTML += `<a class="task-padding">
+        <div class="task-item"><div class="task-card">
+        <div class="task-grid">
+            <div class="task-id">
+                <div class="task-heading">
+                    <span>${data.heading}</span>
+                </div>
+                <div class="task-whowhen">
+                    <a>For: ${data.whoFor} on: ${data.dueDate}</a>
+                </div>
             </div>
-            <div class="task-foron">
-              For: ${data.whoFor} On: ${data.dueDate}
+            <div class="task-description">
+                <p>${data.description}</p>
             </div>
-        </button>
-        <div class="task-content">
-            <p>${data.description}</p>
             <div class="task-btns">
-            <button class="task-btn" id="btn-edit">
-                <span>Edit</span>
-            </button>
-            <button class="task-btn" id="btn-delete">
-                <span>Delete</span>
-            </button>
+                <div class="edit-btn">
+                    <span class="btn-edit-task">Edit</span>
+                </div>
+                <div class="delete-btn">
+                    <span class="btn-delete-task">Delete</span>
+                </div>
+            </div>
         </div>
-    </div>`
+    </div>
+
+    </a>`
             
 });
 
 // edits a task based on heading
 
-ipcRenderer.on("task-edit", (e, data) => {
-    log(`task-edit: ${data.heading}`, locale)
+ipcRenderer.on("edit-task", (e, data) => {
+    log(`editing task: ${data.heading}`, locale)
     // find a task with the id of data.heading and replace it with the new task
     let task = document.getElementById(data.heading);
-    edit = `<button class="task-accordion">
-            <div class="task-heading">
-                ${data.heading}
+    edit = `<a class="task-padding">
+        <div class="task-item"><div class="task-card">
+        <div class="task-grid">
+            <div class="task-id">
+                <div class="task-heading">
+                    <span>${data.heading}</span>
+                </div>
+                <div class="task-whowhen">
+                    <a>For: ${data.whoFor} on: ${data.dueDate}</a>
+                </div>
             </div>
-            <div class="task-foron">
-                For: ${data.whoFor} On: ${data.dueDate}
+            <div class="task-description">
+                <p>${data.description}</p>
             </div>
-        </button>
-        <div class="task-content">
-            <p>${data.description}</p>
             <div class="task-btns">
-            <button class="task-btn" id="btn-edit">
-                <span>Edit</span>
-            </button>
-            <button class="task-btn" id="btn-delete">
-                <span>Delete</span>
-            </button>
-        </div>`
+                <div class="edit-btn">
+                    <span class="btn-edit-task">Edit</span>
+                </div>
+                <div class="delete-btn">
+                    <span class="btn-delete-task">Delete</span>
+                </div>
+            </div>
+        </div></div>
+    </div>
+
+    </a>`
     task.innerHTML = edit;
     ipcRenderer.send("task-edit", edit)
 });
 
 
-
+ipcRenderer.on("update-task-list", (e, data) => {
+    log("update-task-list", locale)
+    refreshTasks()
+});
 
 
 

@@ -72,6 +72,18 @@ app.on("quit", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+// system functions
+
+function addTaskHTML(task) {
+  log("adding task", locale)
+  let taskList = document.getElementById("cntr-tasklist");
+  let taskItem = document.createElement("div");
+  taskItem.classList.add("task-item");
+  return 
+
+}
+
+
 ipcMain.on("app-ready", (e) => {
   log("app up", locale)
   BrowserWindow.getFocusedWindow().webContents.send("up");
@@ -103,21 +115,25 @@ ipcMain.on('task-edit', (e, data) => {
     log("task does not exist", locale)
     try {
       store.addTask(jsondata)
+      e.sender.send("add-task", jsondata)
     } catch (error) {
       console.log(error)
     }
   } else {
     log("task exists", locale)
+    try {
+      store.updateTask(jsondata)
+      e.sender.send("update-task", jsondata)
+    } catch (error) {
+      console.log(error)
+    }
   }
-  for (let i = 0; i < store.tasks.length; i++) {
-    console.log(store.tasks[i])
-    //store.clear()
-  }
+  e.sender.send("update-task-list")
   
 })
 
+// loop through all tasks in store and send to renderer one by one
 ipcMain.on("get-tasks", (e) => {
-  // loop through all tasks in store and send to renderer one by one
   log("get-tasks", locale)
   for (let i = 0; i < store.tasks.length; i++) {
     e.sender.send("add-task", store.tasks[i])

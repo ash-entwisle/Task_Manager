@@ -79,6 +79,23 @@ navbar .btn{
     
 }
 
+navbar .lbtn {
+    -webkit-app-region: no-drag;
+    float: left;
+    top: 0%;
+    height: auto;
+    width: var(--bar-btn-width);
+    padding-left: 5px;
+    padding-right: 5px;
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: var(--Bar);
+    color: var(--Disabled);
+
+}
+
 /*center navbar #ico-minmax*/
 navbar #ico-minmax{
     display: block;
@@ -97,6 +114,11 @@ navbar .btn :hover {
 
 }
 
+navbar .lbtn :hover {
+    background-color: var(--Selection-Background);
+
+}
+
 content {
     position: fixed;
     top: var(--bar-height);
@@ -106,10 +128,40 @@ content {
     background-color: var(--Background);
     color: var(--Text);
     font: 20px/1.2em 'comic sans ms', sans-serif;
-    padding: var(--padding);
-    padding-top: 0px;
-    padding-bottom: 0px;
-    margin: 0%;
+    box-sizing: border-box;
+    text-align: left;
 }
 
+content .task-grid {
+    display: flex;
+    margin: 15px;
+}
 
+content .task-grid .task-id {
+    display: inline-block;
+    width: 25%;
+    min-width: 250px;
+}
+
+content .task-grid .task-id .task-heading {
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+}
+
+content .task-grid .task-id .task-whowhen {
+    width: 100%;
+    text-align: left;
+    font-weight: lighter;
+}
+
+content .task-grid .task-description {
+    margin-left: 25%
+    min-width: 250px;
+    text-align: left;
+}
+
+content .task-grid .task-btns {
+    float: right;
+    margin-right: 15px;
+}

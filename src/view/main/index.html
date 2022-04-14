@@ -9,8 +9,23 @@
   <body>
     <navbar>
       <script type="module" defer src="script.js"></script>
+      <div class="rcntr" id="rctnr">
+        <div class="icon" id="icon">
+          <svg class="ico-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25px"
+            height="25px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+            style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+              d="m12.5 3.5l-4 14m-2-5l-4-4l4-4m8 12l4-4l-4-4" />
+          </svg>
+        </div>
+        <button class="lbtn" id="btn-file">file</button>
+        <button class="lbtn" id="btn-edit">edit</button>
+        <button class="lbtn" id="btn-view">view</button>
+      </div>
 
-      <div class="rmmc" id="rmmc">
+      </div>
+
+      <div class="lcntr" id="lcntr">
         <button class="btn" id="btn-closeapp">
           <svg id="ico-closeapp" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px"
             preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
@@ -34,41 +49,38 @@
           </svg>
         </button>
       </div>
-      <div class="icon" id="icon">
-        <svg class="ico-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-          width="25px" height="25px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
-          style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"d="m12.5 3.5l-4 14m-2-5l-4-4l4-4m8 12l4-4l-4-4" />
-        </svg>
-      </div>
     </navbar>
 
     <content>
       <div class="cntr-tasklist" id="cntr-tasklist">
 
-        <div class="task-list" id="{task.heading}">
-          <button class="task-accordion">
-            <div class="task-heading">
-              {task.heading}
+        <a class="task-padding">
+          <div class="task-item">
+            <div class="task-card">
+              <div class="task-grid">
+                <div class="task-id">
+                  <div class="task-heading">
+                    <span>${data.heading}</span>
+                  </div>
+                  <div class="task-whowhen">
+                    <a>For: ${data.whoFor} on: ${data.dueDate}</a>
+                  </div>
+                </div>
+                <div class="task-description">
+                  <p>${data.description}</p>
+                </div>
+                <div class="task-btns">
+                  <div class="edit-btn">
+                    <span class="btn-edit-task">Edit</span>
+                  </div>
+                  <div class="delete-btn">
+                    <span class="btn-delete-task">Delete</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="task-foron">
-              For: {task.for} On: {task.on}
-            </div>
-          </button>
-          <div class="task-content">
-            <p>{task.content}</p>
-            <div class="task-btns">
-              <button class="task-btn" id="btn-edit">
-                <span>Edit</span>
-              </button>
-              <button class="task-btn" id="btn-delete">
-                <span>Delete</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
+        
+        </a>
 
       <div class="cntr-taskinp" id="cntr-taskinp">
         <form id="taskinp">
