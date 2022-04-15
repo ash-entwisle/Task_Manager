@@ -1,5 +1,5 @@
 const fs = require('fs');
-const logger = require('../logger/logger').log
+const log = require('../logger/logger').log
 let locale = "splasher"
 
 function getSplash() {
@@ -8,7 +8,7 @@ function getSplash() {
         const data = fs.readFileSync('./src/data/splash/splash.txt', 'UTF-8');
         const lines = data.split(/\r?\n/);
         let splash = lines[Math.floor(Math.random() * lines.length)]
-        logger("New Splash - " + splash, locale)
+        log("New Splash - " + splash, locale)
         return splash
         
     } catch (err) {

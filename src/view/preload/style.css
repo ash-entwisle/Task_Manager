@@ -1,0 +1,46 @@
+:root {
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    font: 20px/1.2em 'segoue UI', sans-serif;
+    position: relative;
+
+        --Background: #282C34;
+        --Bar: #21252B;
+        --Selection-Background: #3A3F4B;
+        --BG: #3c4150;
+        --Foreground: #979FAD;
+        --Text: #979FAD;
+        --Disabled: #6B727D;
+
+
+    background-color: var(--Background);
+}
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: table
+}
+.content {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.content .loading {
+    font: 40px/1.2em 'segoue UI', sans-serif;
+    font-weight: bold;
+    color: var(--Text);
+
+
+}
+
+.content .splash {
+    color: var(--Disabled);
+    font-weight: lighter;
+    text-align: center;
+    margin-top: 15px;
+}

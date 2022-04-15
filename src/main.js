@@ -11,25 +11,51 @@ let locale = "main";
 
 
 
-
 if (require('electron-squirrel-startup')) { 
   app.quit();
 }
 
-const createWindow = () => {
+const createSplash = () => {
+  let splash = new BrowserWindow({
+    width: 400,
+    height: 200,
+    frame: false,
+    resizable: false,
+    openDevTools: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+    
+  });
+  splash.loadFile(path.join(__dirname, './view/preload/index.html'));
+  splash.on('closed', () => {
+    splash = null;
+  });
+
+  return splash;
+
+}
+
+const createMain = () => {
   log("window created", locale)  
   const mainWindow = new BrowserWindow({
-    width: 800,
+    width: 750,
     height: 600,
+    minWidth: 750,
+    minHeight: 600,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     },
     autoHideMenuBar: true,
-    frame:false
+    frame:false,
+    show: false
   });
   mainWindow.loadFile(path.join(__dirname, './view/main/index.html'));
   mainWindow.webContents.openDevTools();
+
+  return mainWindow;
 
 };
 
@@ -37,7 +63,16 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  createWindow();
+  splash = createSplash();
+  main = createMain();
+  //show splash, when main is on ready-to-show, destroy splash
+  
+  main.on('ready-to-show', () => {
+    splash.destroy();
+    main.show();
+
+  });
+
   log("app ready", locale)
 });
 
@@ -53,12 +88,13 @@ app.on('window-all-closed', () => {
   }
 });
 
-
+log("main script loaded", locale)
 app.on('activate', () => {
+  log("activate", locale)
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createMain();
   }
 });
 
@@ -73,15 +109,6 @@ app.on("quit", () => {
 // code. You can also put them in separate files and import them here.
 
 // system functions
-
-function addTaskHTML(task) {
-  log("adding task", locale)
-  let taskList = document.getElementById("cntr-tasklist");
-  let taskItem = document.createElement("div");
-  taskItem.classList.add("task-item");
-  return 
-
-}
 
 
 ipcMain.on("app-ready", (e) => {
@@ -140,10 +167,20 @@ ipcMain.on("get-tasks", (e) => {
   }
 })
 
+// get task data by heading
+ipcMain.on("fetch-task", (e, heading) => {
+  log("got-task", locale)
+  let task = store.getTask(heading)
+  //console.log(task)
+  e.sender.send("got-task", task)
+})
+
 // check if task exists
 ipcMain.on("task-exists", (e, data) => {
-  log("task-exists", locale)
-  let jsondata = JSON.parse(data);
+  let jsondata = {heading: data};
+  try {
+    jsondata = JSON.parse(data);
+  } catch (error) {}
   if (store.taskExists(jsondata.heading)) {
     log("task exists", locale)
     e.sender.send("task-exists-response", true)
@@ -153,3 +190,7 @@ ipcMain.on("task-exists", (e, data) => {
   }
 })
 
+
+ipcMain.on("log", (e, data, locale) => {
+  log(data, locale)
+})

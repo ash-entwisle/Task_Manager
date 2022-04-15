@@ -2,6 +2,38 @@ const Store = require('electron-store');
 const store = new Store();
 
 const schema = {
+    preferences: {
+        type: 'array',
+        items: {
+            type: 'object',
+            properties: {
+                notify: {
+                    type: "array",
+                    properties: {
+                        enabled: {
+                            type: "boolean",
+                            default: true
+                        },
+                        interval: {
+                            type: "integer",
+                            default: "60"
+                        },
+                    },
+    
+    
+                }, 
+                colours: {
+                    type: "array",
+                    properties: {
+                        primary: {
+                            type: "string",
+                            default: "#000000"
+                        },
+                    },
+                },
+            },
+        },
+    },
     tasks: {
         type: 'array',
         items: {
@@ -53,6 +85,7 @@ class DataStore extends Store {
         super(schema)
         //this.dbm = new dbm();
         this.tasks = this.get('tasks') || []
+        this.preferences = this.get('preferences') || {}
     }
 
     // save tasks
@@ -80,8 +113,8 @@ class DataStore extends Store {
     }
 
     // get task by title
-    getTask(task) {
-        log("getting task by title", locale)
+    getTask(title) {
+        log("getting task by title - " + title, locale)
         return this.get('tasks').find(task => task.heading === title)
     }
 

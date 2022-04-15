@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <title>Task List</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="style.css">
+    <script type="module" defer src="script.js"></script>
+    <script type="module" defer src="taskio.js"></script>
   </head>
   <body>
     <navbar>
-      <script type="module" defer src="script.js"></script>
       <div class="rcntr" id="rctnr">
         <div class="icon" id="icon">
           <svg class="ico-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25px"
@@ -55,54 +55,59 @@
       <div class="cntr-tasklist" id="cntr-tasklist">
 
         <a class="task-padding">
-          <div class="task-item">
-            <div class="task-card">
-              <div class="task-grid">
-                <div class="task-id">
-                  <div class="task-heading">
-                    <span>${data.heading}</span>
+          <div class="task-item" id=${idheading}>
+            <div class="task-card" id=${idheading}>
+              <div class="task-grid" id=${idheading}>
+                <div class="task-id" id=${idheading}>
+                  <div class="task-heading" id=${idheading}>
+                    <span id=${idheading}>${data.heading}</span>
                   </div>
-                  <div class="task-whowhen">
-                    <a>For: ${data.whoFor} on: ${data.dueDate}</a>
+                  <div class="task-whowhen" id=${idheading}>
+                    <div id=${idheading}>For: ${data.whoFor}</div>
+                    <div id=${idheading}>Due: ${data.dueDate}</div>
                   </div>
                 </div>
-                <div class="task-description">
-                  <p>${data.description}</p>
+                <div class="task-description" id=${idheading}>
+                  <p id=${idheading}>${data.description}</p>
                 </div>
-                <div class="task-btns">
-                  <div class="edit-btn">
-                    <span class="btn-edit-task">Edit</span>
+                <div class="task-btns" id=${idheading}>
+                  <div class="edit-btn" id=${idheading}>
+                    <span class="btn-edit-task" id=${idheading}>Edit</span>
                   </div>
-                  <div class="delete-btn">
-                    <span class="btn-delete-task">Delete</span>
+                  <div class="delete-btn" id=${idheading}>
+                    <span class="btn-delete-task" id=${idheading}>Delete</span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
         </a>
       </div>
 
       <div class="cntr-taskinp" id="cntr-taskinp">
-        <form id="taskinp">
-          <div id="taskinp-name">
-            <label>Task Name</label>
-            <input class="inp-taskname" id="inp-taskname" type="text" placeholder="task title...">
-          </div>
-          <div id="taskinp-for">
-            <label>For</label>
-            <input class="inp-taskfor" id="inp-taskfor" type="text" placeholder="for...">
-          <div id="taskinp-date">
-            <label>Due Date</label>
-            <input class="inp-taskdate" id="inp-taskdate" type="date" placeholder="dd-mm-yyyy">
-          </div> 
-          <div id="taskinp-desc">
-            <label>Description</label>
-            <textarea class="inp-taskdesc" id="inp-taskdesc" placeholder="task description..."></textarea>
-          </div>
-          <div id="taskinp-submit">
-            <input class="inp-tasksubmit" id="inp-tasksubmit" type="submit">
-          </div>
-        </form>
+        <div class="task-form">
+          <form class="taskinp" id="taskinp">
+            <div id="taskinp-name">
+              <label>Task Name</label>
+              <input class="inp-data" id="inp-taskname" type="text" placeholder="task title...">
+            </div>
+            <div id="taskinp-for">
+              <label>For</label>
+              <input class="inp-data" id="inp-taskfor" type="text" placeholder="for...">
+            <div id="taskinp-date">
+              <label>Due Date</label>
+              <input class="inp-data" id="inp-taskdate" type="date" placeholder="yyyy-mm-dd">
+            </div> 
+            <div id="taskinp-desc">
+              <label>Description</label>
+              <textarea class="inp-txt" id="inp-taskdesc" placeholder="task description..."></textarea>
+            </div>
+            <div id="taskinp-btns">
+              <input class="inp-sub" id="inp-tasksubmit" type="submit" value="save">
+              <input class="inp-close" id="inp-taskclose" type="button" value="close">
+            </div>
+          </form>
+        </div>
       </div>
 
 

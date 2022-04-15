@@ -1,4 +1,8 @@
 :root{
+    min-width: 750px;
+    overflow-x: hidden;
+
+
     --Background: #282C34;
     --Bar: #21252B;
     --Selection-Background: #3A3F4B;
@@ -32,8 +36,9 @@
     --bar-height: 30px;
     --bar-btn-width:35px;
 
+    --font: 20px/1.2em 'segoue UI',sans-serif;
 
-
+    font: var(--font);
     background-color: var(--BG);
 }
 
@@ -121,13 +126,13 @@ navbar .lbtn :hover {
 
 content {
     position: fixed;
+    display: block;
     top: var(--bar-height);
     left: 0%;
     width: 100%;
     height: 100%;
     background-color: var(--Background);
     color: var(--Text);
-    font: 20px/1.2em 'comic sans ms', sans-serif;
     box-sizing: border-box;
     text-align: left;
 }
@@ -137,8 +142,17 @@ content .task-grid {
     margin: 15px;
 }
 
+content .task-card {
+    background-color: var(--BG);
+    margin: 15px;
+    padding: 5px;
+    border-radius: 10px;
+
+}
+
 content .task-grid .task-id {
     display: inline-block;
+    border: 5px solid transparent;
     width: auto;
     min-width: 250px;
 }
@@ -151,12 +165,14 @@ content .task-grid .task-id .task-heading {
 
 content .task-grid .task-id .task-whowhen {
     width: auto;
+    max-width: 250px;
     text-align: left;
     font-weight: lighter;
 }
 
 content .task-grid .task-description {
-    margin-left: 25px;
+    width: fit-content;
+    right: 5%;
     min-width: 250px;
     text-align: left;
 }
@@ -167,8 +183,112 @@ content .task-grid .task-btns {
     margin-right: 15px;
 }
 
+
 content .cnrt-tasklist {
     display: flex;
     flex-direction: column;
     margin: 15px;
+    width: 50%;
+}
+
+content .cntr-taskinp {
+    position: absolute;
+    display: none;
+    width: 25%;
+    height: 50%;
+    max-height: 75%;
+    min-height: auto;
+    min-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 15px;
+    
+}
+
+content .cntr-taskinp .task-form {
+    background-color: var(--Background);
+    border: 25px;
+    border-color: var(--Bar);
+    box-shadow: 0 0 10px #000;
+    border-radius: 5px;
+}
+
+content .taskinp {
+    padding: 2%;
+}
+
+content .taskinp label {   
+    display: flex;
+    width: 50%;
+}
+
+content .taskinp input {
+    background-color: var(--Second-Background);
+    display: flexbox;
+    border: none;
+    outline: none;
+    color: var(--Text);
+    font-size: 1em;
+    font-weight: lighter;
+}
+
+content .taskinp textarea {
+    background-color: var(--Second-Background);
+    display: flexbox;
+    border: none;
+    outline: none;
+    color: var(--Text);
+    font-size: 1em;
+    font-weight: lighter;
+    width: 100%;
+    height: 100px;
+    min-height: 100px;
+    resize: vertical;
+    max-height: 250px;
+    font : var(--font);
+}
+
+content .taskinp span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+content .taskinp .inp-data {
+    display: flex;
+    right: 0%;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    font: var(--font);
+    color: var(--Text);
+}
+
+content .taskinp .taskinp-btns {
+    display: flex;
+    float: left;
+}
+
+content .taskinp input .inp-sub {
+    width: 25%;
+    height: 100%;
+    border: 5px;
+    border-radius: 5px;
+    outline: none;
+    background-color: var(--Second-Background);
+    color: var(--Text);
+    box-sizing: border-box;
+    text-align: left;
+}
+
+content .taskinp input .inp-close {
+    width: 25%;
+    height: 100%;
+    border: 5px;
+    border-radius: 5px;
+    outline: none;
+    background-color: var(--Second-Background);;
+    box-sizing: border-box;
+    text-align: right;
 }
