@@ -42,6 +42,7 @@ function FormClose() {
     taskinp.style.display = "none";
 }
 
+/*
 function FormOpen(data) {
     taskinp.style.display = "block";
     taskheading.focus();
@@ -50,21 +51,26 @@ function FormOpen(data) {
         console.log("data is undefined")
         document.getElementById("inp-taskname").value = "";
         document.getElementById("inp-taskfor").value = "";
-        document.getElementById("inp-taskdesc").value = "";
         document.getElementById("inp-taskdate").value = "";
+        document.getElementById("inp-taskdesc").value = "";
         return;
     } else {
         try {
             log(data.heading, locale)
             document.getElementById("inp-taskname").value = data.heading;
-            document.getElementById("inp-taskfor").value = data.whoFor;
-            document.getElementById("inp-taskdesc").value = data.description;
+            document.getElementById("inp-taskfor").placeholder = data.whoFor;
             document.getElementById("inp-taskdate").value = data.dueDate;
+            document.getElementById("inp-taskdesc").placeholder = data.description;
         } catch (err) {
+            console.log(err)
         }
     }
 }
+*/
 
+function FormOpen(data) {
+    //ipcRenderer.send
+}
         
 
 // basic window functions
@@ -101,23 +107,16 @@ document.addEventListener("keydown", (e) => {
     // listen for CTRL+N and then show the new task form
     if (e.ctrlKey && e.keyCode === 78) {
         log("CTRL+N pressed", locale)
-        FormOpen();
+        ipcRenderer.send("task-new")
         
     }
     
-    // listen for escape key and if task form open, close it
-    if (e.keyCode === 27) {
-        log("ESC pressed", locale)
-        if (taskinp.style.display === "block") {
-            FormClose();
-        }
-    }
 })
 
 
 // sets form data
 
-ipcRenderer.on("got-task", (e, data) => {
+ipcRenderer.on("task-fetch-response", (e, data) => {
     log("got task", locale)
     //console.log(data)
     // set the form to open
@@ -138,15 +137,15 @@ document.addEventListener("dblclick", (e) => {
     let heading = addSpaces(e.target.id);
     log(`looking for ${heading}`, locale)
     // check if heading is in tasklist
-    ipcRenderer.send("task-exists", heading)
+    ipcRenderer.send("task-check", heading)
     if (heading === "" || heading === undefined) {
         return
     }
 
-    ipcRenderer.on("task-exists-response", (e, data) => {
-        if (data == true) {
+    ipcRenderer.on("task-check-response", (e, check) => {
+        if (check == true) {
             log("getting heading " + heading, locale)
-            ipcRenderer.send("fetch-task", heading)
+            ipcRenderer.send("task-fetch", heading)
         } else {
             log("task does not exist", locale)
         }

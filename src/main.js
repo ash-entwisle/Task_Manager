@@ -15,7 +15,8 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createSplash = () => {
+// Function to create Splash Loading window
+function createSplash() {
   let splash = new BrowserWindow({
     width: 400,
     height: 200,
@@ -37,7 +38,8 @@ const createSplash = () => {
 
 }
 
-const createMain = () => {
+// Function to create Main Window
+function createMain(){
   log("window created", locale)  
   const mainWindow = new BrowserWindow({
     width: 750,
@@ -56,6 +58,34 @@ const createMain = () => {
   mainWindow.webContents.openDevTools();
 
   return mainWindow;
+
+};
+
+// Function to create Task Form Window
+function createTaskForm(data){
+  log("task form created", locale)
+  const taskForm = new BrowserWindow({
+    width: 400,
+    height: 200,
+    minWidth: 400,
+    minHeight: 200,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    },
+    autoHideMenuBar: true,
+    frame:false,
+    show: false
+    });
+  taskForm.loadFile(path.join(__dirname, './view/form/index.html'));
+  taskForm.webContents.openDevTools();
+  
+  // if there is data, initialise the form with the data
+  if (data) {
+    taskForm.webContents.send('form-init', data);
+  }
+  
+  return taskForm;
 
 };
 
@@ -135,6 +165,65 @@ ipcMain.on('app-close', () => {
   win.close()
 });
 
+
+// main functions
+
+
+function renderAllTasks()
+
+
+// Data CRUD
+
+// Data Create (CRUD)
+ipcMain.on("task-add", (e, data) => {
+  log("task add", locale)
+  // checks if task is not in store
+  if (!store.taskExists(data.heading)) {
+    // add task to store
+    store.addTask(data);
+    e.sender.send("task-refresh")
+  } else {
+    // if task is in store, ask for confirmation
+    e.sender.send("task-confirm-edit", data.heading)
+    ipcMain.on("task-confirm-edit-r", (e, bool) => {
+      // if confirmed, update task
+      if (bool) {
+        store.updateTask(data);
+      }
+    });
+  }
+});
+
+// Data Edit (CRUD)
+ipcMain.on("task-edit", (e, data) => {
+  log("task edit", locale)
+  // delete task from store if it exists
+  if (store.taskExists(data.heading)) {
+    store.deleteTask(data.heading);
+  } else {
+    // if task doesnt exist, check if user wants to add it
+    e.sender.send("task-confirm-add", data.heading)
+    ipcMain.on("task-confirm-add-r", (e, bool) => {
+      // if confirmed, add task
+      if (bool) {
+        store.addTask(data);
+      }
+    });
+  }
+  e.sender.send("task-refresh")
+});
+
+// Data Delete (CRUD) (assume confirmation)
+ipcMain.on("task-delete", (e, data) => {
+  log("task delete", locale)
+  // delete task from store
+  if (store.taskExists(data.heading)) {
+    store.deleteTask(data.heading);
+  }
+  e.sender.send("task-refresh")
+});
+
+
 ipcMain.on('task-edit', (e, data) => {
   log("task-edit", locale)
   let jsondata = JSON.parse(data);
@@ -150,43 +239,43 @@ ipcMain.on('task-edit', (e, data) => {
     log("task exists", locale)
     try {
       store.updateTask(jsondata)
-      e.sender.send("update-task", jsondata)
+      e.sender.send("task-update", jsondata)
     } catch (error) {
       console.log(error)
     }
   }
-  e.sender.send("update-task-list")
+  e.sender.send("task-refresh2")
   
 })
 
 // loop through all tasks in store and send to renderer one by one
-ipcMain.on("get-tasks", (e) => {
+ipcMain.on("task-get-all", (e) => {
   log("get-tasks", locale)
   for (let i = 0; i < store.tasks.length; i++) {
-    e.sender.send("add-task", store.tasks[i])
+    e.sender.send("task-render", store.tasks[i])
   }
 })
 
 // get task data by heading
-ipcMain.on("fetch-task", (e, heading) => {
-  log("got-task", locale)
+ipcMain.on("task-fetch", (e, heading) => {
+  log(`getting task: ${heading}`, locale)
   let task = store.getTask(heading)
   //console.log(task)
-  e.sender.send("got-task", task)
+  e.sender.send("task-fetch-response", task)
 })
 
 // check if task exists
-ipcMain.on("task-exists", (e, data) => {
+ipcMain.on("task-check", (e, data) => {
   let jsondata = {heading: data};
   try {
     jsondata = JSON.parse(data);
   } catch (error) {}
   if (store.taskExists(jsondata.heading)) {
     log("task exists", locale)
-    e.sender.send("task-exists-response", true)
+    e.sender.send("task-check-response", true)
   } else {
     log("task does not exist", locale)
-    e.sender.send("task-exists-response", false)
+    e.sender.send("task-check-response", false)
   }
 })
 

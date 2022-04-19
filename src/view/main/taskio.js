@@ -16,7 +16,7 @@ const time = require("../../lib/timer/timer");
 
 // system funcitons
 
-function log(data, locale) {
+function log(data) {
     ipcRenderer.send("log", data, locale);
 }
 
@@ -26,10 +26,10 @@ function remSpaces(str) {
 }
 
 function refreshTasks() {
-    log("refreshing tasks", locale)
+    log("refreshing tasks")
     let taskList = document.getElementById("cntr-tasklist");
     taskList.innerHTML = "";
-    ipcRenderer.send("get-tasks")
+    ipcRenderer.send("task-get-all")
 }
 
 function formatHTML (data) {
@@ -125,8 +125,8 @@ submitForm.addEventListener("click", (event) => {
 
 // appends a new tasj to the task list
 
-ipcRenderer.on("add-task", (e, data) => {
-    log(`add-task: ${data.heading}`, locale)
+ipcRenderer.on("task-render", (e, data) => {
+    log(`add-task: ${data.heading}`)
     let taskList = document.getElementById("cntr-tasklist");
     // append task to taskList with the class of task-accordion and the id of data.heading
     // inside a <a> with the class task-padding
@@ -136,8 +136,8 @@ ipcRenderer.on("add-task", (e, data) => {
 
 // edits a task based on heading
 
-ipcRenderer.on("update-task", (e, data) => {
-    log(`editing task: ${data.heading}`, locale)
+ipcRenderer.on("task-update", (e, data) => {
+    log(`editing task: ${data.heading}`)
     // find a task with the id of data.heading and replace it with the new task
     let task = document.getElementById(data.heading);
     task.innerHTML = formatHTML(data);
@@ -145,8 +145,8 @@ ipcRenderer.on("update-task", (e, data) => {
 });
 
 
-ipcRenderer.on("update-task-list", (e, data) => {
-    log("update-task-list", locale)
+ipcRenderer.on("task-refresh", (e, data) => {
+    log("update-task-list")
     refreshTasks()
 });
 
