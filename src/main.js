@@ -16,76 +16,48 @@ if (require('electron-squirrel-startup')) {
 }
 
 // Function to create Splash Loading window
-function createSplash() {
-  let splash = new BrowserWindow({
-    width: 400,
-    height: 200,
-    frame: false,
-    resizable: false,
-    openDevTools: false,
+
+function windowTemplate(width, height, hidden) {
+  return new BrowserWindow({
+    width: width,
+    height: height,
+    minWidth: width,
+    minHeight: height,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
-    }
-    
+    },
+    autoHideMenuBar: true,
+    frame: false,
+    show: hidden
   });
+}
+
+// function to create Form Window
+function createForm(){
+  log("Creating Form Window", locale)
+  let form = windowTemplate(400, 200, true)
+  form.loadFile(path.join(__dirname, './view/form/index.html'))
+  return form
+}
+
+// function to create splash window
+function createSplash() {
+  let splash = windowTemplate(400, 200, true);
   splash.loadFile(path.join(__dirname, './view/preload/index.html'));
   splash.on('closed', () => {
     splash = null;
-  });
-
+  }); 
   return splash;
-
 }
 
 // Function to create Main Window
 function createMain(){
   log("window created", locale)  
-  const mainWindow = new BrowserWindow({
-    width: 750,
-    height: 600,
-    minWidth: 750,
-    minHeight: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    },
-    autoHideMenuBar: true,
-    frame:false,
-    show: false
-  });
+  const mainWindow = windowTemplate(800, 600, false);
   mainWindow.loadFile(path.join(__dirname, './view/main/index.html'));
   mainWindow.webContents.openDevTools();
-
   return mainWindow;
-
-};
-
-// Function to create Task Form Window
-function createTaskForm(data){
-  log("task form created", locale)
-  const taskForm = new BrowserWindow({
-    width: 400,
-    height: 200,
-    minWidth: 400,
-    minHeight: 200,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    },
-    autoHideMenuBar: true,
-    frame:false,
-    show: false
-    });
-  taskForm.loadFile(path.join(__dirname, './view/form/index.html'));
-  taskForm.webContents.openDevTools();
-  
-  // if there is data, initialise the form with the data
-  if (data) {
-    taskForm.webContents.send('form-init', data);
-  }
-  
-  return taskForm;
 
 };
 
@@ -93,10 +65,10 @@ function createTaskForm(data){
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  splash = createSplash();
-  main = createMain();
+  let splash = createSplash();
+  let main = createMain();
+
   //show splash, when main is on ready-to-show, destroy splash
-  
   main.on('ready-to-show', () => {
     splash.destroy();
     main.show();
@@ -146,6 +118,8 @@ ipcMain.on("app-ready", (e) => {
   BrowserWindow.getFocusedWindow().webContents.send("up");
 })
 
+
+
 ipcMain.on('app-reduce', () => {
   win = BrowserWindow.getFocusedWindow()
   win.minimize()
@@ -163,16 +137,17 @@ ipcMain.on('app-minmax', () => {
 ipcMain.on('app-close', () => {
   win = BrowserWindow.getFocusedWindow()
   win.close()
+  app.quit()
 });
 
 
 // main functions
 
 
-function renderAllTasks()
+// function renderAllTasks()
 
 
-// Data CRUD
+//  =====   Data CRUD   =====
 
 // Data Create (CRUD)
 ipcMain.on("task-add", (e, data) => {
@@ -195,11 +170,13 @@ ipcMain.on("task-add", (e, data) => {
 });
 
 // Data Edit (CRUD)
-ipcMain.on("task-edit", (e, data) => {
+ipcMain.on("task-edit", (e, data, heading) => {
   log("task edit", locale)
   // delete task from store if it exists
   if (store.taskExists(data.heading)) {
+    // if heading exists
     store.deleteTask(data.heading);
+    store.addTask(data);
   } else {
     // if task doesnt exist, check if user wants to add it
     e.sender.send("task-confirm-add", data.heading)
@@ -224,30 +201,6 @@ ipcMain.on("task-delete", (e, data) => {
 });
 
 
-ipcMain.on('task-edit', (e, data) => {
-  log("task-edit", locale)
-  let jsondata = JSON.parse(data);
-  if (!store.taskExists(jsondata.heading)) {
-    log("task does not exist", locale)
-    try {
-      store.addTask(jsondata)
-      e.sender.send("add-task", jsondata)
-    } catch (error) {
-      console.log(error)
-    }
-  } else {
-    log("task exists", locale)
-    try {
-      store.updateTask(jsondata)
-      e.sender.send("task-update", jsondata)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  e.sender.send("task-refresh2")
-  
-})
-
 // loop through all tasks in store and send to renderer one by one
 ipcMain.on("task-get-all", (e) => {
   log("get-tasks", locale)
@@ -261,22 +214,27 @@ ipcMain.on("task-fetch", (e, heading) => {
   log(`getting task: ${heading}`, locale)
   let task = store.getTask(heading)
   //console.log(task)
-  e.sender.send("task-fetch-response", task)
+  e.sender.send("task-fetch-r", task)
 })
 
 // check if task exists
-ipcMain.on("task-check", (e, data) => {
-  let jsondata = {heading: data};
-  try {
-    jsondata = JSON.parse(data);
-  } catch (error) {}
-  if (store.taskExists(jsondata.heading)) {
+ipcMain.on("task-check", (e, heading) => {
+  if (store.taskExists(heading)) {
     log("task exists", locale)
-    e.sender.send("task-check-response", true)
+    e.sender.send("task-check-r", true)
   } else {
     log("task does not exist", locale)
-    e.sender.send("task-check-response", false)
+    e.sender.send("task-check-r", false)
   }
+})
+
+ipcMain.on("form-open", data => {
+  log("form open", locale)
+  let form = createForm(data)
+  
+  form.on("closed", () => {
+    form = null;
+  });
 })
 
 

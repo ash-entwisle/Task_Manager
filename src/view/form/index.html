@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task List</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" defer src="script.js"></script>
+    <script type="module" defer src="taskio.js"></script>
+</head>
+
+<body>
+    <navbar>
+        <div class="rcntr" id="rctnr">
+            <div class="icon" id="icon">
+                <svg class="ico-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="25px" height="25px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+                    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        d="m12.5 3.5l-4 14m-2-5l-4-4l4-4m8 12l4-4l-4-4" />
+                </svg>
+            </div>
+            <button class="lbtn" id="btn-file">file</button>
+            <button class="lbtn" id="btn-edit">edit</button>
+            <button class="lbtn" id="btn-view">view</button>
+        </div>
+
+        </div>
+
+        <div class="lcntr" id="lcntr">
+            <button class="btn" id="btn-closeapp">
+                <svg id="ico-closeapp" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="30px" height="30px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+                    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        d="m7.5 7.5l6 6m0-6l-6 6" />
+                </svg>
+            </button>
+            <button class="btn" id="btn-minmax">
+                <svg id="ico-minmax" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="20px" height="20px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+                    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        d="M5.5 3.5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2z" />
+                </svg>
+            </button>
+            <button class="btn" id="btn-reduce">
+                <svg id="ico-reduce" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="30px" height="30px" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21"
+                    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        d="M5.5 10.5h10" />
+                </svg>
+            </button>
+        </div>
+    </navbar>
+
+    <content>
+        <div class="cntr-taskinp" id="cntr-taskinp">
+            <div class="task-form">
+                <form class="taskinp" id="taskinp">
+                    <div id="taskinp-name">
+                        <label>Task Name</label>
+                        <input class="inp-data" id="inp-taskname" type="text" placeholder="task title...">
+                    </div>
+                    <div id="taskinp-for">
+                        <label>For</label>
+                        <input class="inp-data" id="inp-taskfor" type="text" placeholder="for...">
+                        <div id="taskinp-date">
+                            <label>Due Date</label>
+                            <input class="inp-data" id="inp-taskdate" type="date" placeholder="yyyy-mm-dd">
+                        </div>
+                        <div id="taskinp-desc">
+                            <label>Description</label>
+                            <textarea class="inp-txt" id="inp-taskdesc" placeholder="task description..."></textarea>
+                        </div>
+                        <div id="taskinp-btns">
+                            <input class="inp-sub" id="inp-tasksubmit" type="submit" value="save">
+                            <input class="inp-close" id="inp-taskclose" type="button" value="close">
+                        </div>
+                </form>
+            </div>
+        </div>
+
+
+    </content>
+
+</body>
+
+</html>

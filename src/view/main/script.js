@@ -5,7 +5,7 @@ const closeform = document.getElementById("inp-taskclose")
 const taskheading = document.getElementById("inp-taskname")
 const taskinp = document.getElementById("cntr-taskinp")
 
-const { ipcRenderer } = require("electron")
+const { ipcRenderer, BrowserWindow, ipcMain } = require("electron")
 const fs = require("fs")
 const { format } = require("path")
 
@@ -27,49 +27,37 @@ function addSpaces(str) {
 }
 
 
+
 // misc toggle functions
 
-function FormToggle () {
-    let current = taskinp.style.display;
-    if (current === "none") {
-        FormClose();
-    } else {
-        FormOpen();
-    } 
-}
-
-function FormClose() {
-    taskinp.style.display = "none";
-}
-
-/*
-function FormOpen(data) {
-    taskinp.style.display = "block";
-    taskheading.focus();
-    // if heading does not exist, do nothing
-    if (data === undefined) {
-        console.log("data is undefined")
-        document.getElementById("inp-taskname").value = "";
-        document.getElementById("inp-taskfor").value = "";
-        document.getElementById("inp-taskdate").value = "";
-        document.getElementById("inp-taskdesc").value = "";
-        return;
-    } else {
-        try {
-            log(data.heading, locale)
-            document.getElementById("inp-taskname").value = data.heading;
-            document.getElementById("inp-taskfor").placeholder = data.whoFor;
-            document.getElementById("inp-taskdate").value = data.dueDate;
-            document.getElementById("inp-taskdesc").placeholder = data.description;
-        } catch (err) {
-            console.log(err)
+function createForm() {
+    return new BrowserWindow({
+        width: 400,
+        height: 200,
+        frame: false,
+        resizable: false,
+        openDevTools: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
         }
-    }
+    });
 }
-*/
 
-function FormOpen(data) {
-    //ipcRenderer.send
+function OpenForm(data) {
+    // create form window
+    let form = createForm()
+    form.loadFile(format(__dirname, "./view/form/index.html"))
+
+    // gets task data from main
+    ipcRenderer.send("task-fetch", data.heading)
+
+    // on response, send data to task-
+    ipcRenderer.on("task-fetch-r", (e, data) => {
+        form.webContents.send("task-init", data)
+    })
+
+    return form
 }
         
 
@@ -107,8 +95,8 @@ document.addEventListener("keydown", (e) => {
     // listen for CTRL+N and then show the new task form
     if (e.ctrlKey && e.keyCode === 78) {
         log("CTRL+N pressed", locale)
-        ipcRenderer.send("task-new")
-        
+        ipcRenderer.send("form-open")
+                
     }
     
 })
@@ -142,10 +130,17 @@ document.addEventListener("dblclick", (e) => {
         return
     }
 
-    ipcRenderer.on("task-check-response", (e, check) => {
+    ipcRenderer.on("task-check-r", (e, check) => {
         if (check == true) {
             log("getting heading " + heading, locale)
+            // get form data
             ipcRenderer.send("task-fetch", heading)
+            // on response, launch form with data
+            ipcRenderer.on("task-fetch-r", (e, data) => {
+                log("got task", locale)
+                // open form
+                let form = OpenForm(data)
+            })
         } else {
             log("task does not exist", locale)
         }
@@ -160,4 +155,5 @@ ipcRenderer.on("test", (e, data) => {
     log("test", locale)
     console.log(data)
 });
+
 

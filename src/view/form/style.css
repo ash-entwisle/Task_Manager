@@ -1,0 +1,239 @@
+:root {
+    min-width: 750px;
+    overflow-x: hidden;
+
+
+    --Background: #282C34;
+    --Bar: #21252B;
+    --Selection-Background: #3A3F4B;
+    --BG: #3c4150;
+    --Foreground: #979FAD;
+    --Text: #979FAD;
+    --Disabled: #6B727D;
+
+    --Selection-Foreground: #FFFFFF;
+    --Buttons: #3A3F4B;
+    --Second-Background: #2F333D;
+    --Active: #383E49;
+    --Border: #282C34;
+    --Hlight: #383D48;
+    --Tree: #3A3F4B;
+    --Notifications: #282C34;
+    --Accent: #2979ff;
+    --Comments: #59626F;
+    --Links: #56B6C2;
+    --Functions: #61AEEF;
+    --Keywords: #C679DD;
+    --Tags: #F07178;
+    --Strings: #98C379;
+    --Operators: #61AFEF;
+    --Attributes: #E5C17C;
+    --Numbers: #D19A66;
+    --Parameters: #ABB2BF;
+
+
+    --padding: 5px;
+    --bar-height: 30px;
+    --bar-btn-width: 35px;
+
+    --font: 20px/1.2em 'segoue UI', sans-serif;
+
+    font: var(--font);
+    background-color: var(--BG);
+}
+
+
+navbar {
+    -webkit-app-region: drag;
+    /* Allow user to drag the window using this titlebar */
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    /* Prevent user from selecting things */
+    user-select: none;
+    position: fixed;
+    top: 0%;
+    height: auto;
+    background-color: var(--Bar);
+    width: 100%;
+    padding: 0%;
+    margin: 0%;
+    left: 0%;
+}
+
+
+navbar .icon {
+    float: left;
+    -webkit-app-region: drag;
+    color: var(--Disabled)
+}
+
+navbar .btn {
+    -webkit-app-region: no-drag;
+    float: right;
+    top: 0%;
+    height: auto;
+    width: var(--bar-btn-width);
+    padding-left: 5px;
+    padding-right: 5px;
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: var(--Bar);
+    color: var(--Disabled);
+
+}
+
+navbar .lbtn {
+    -webkit-app-region: no-drag;
+    float: left;
+    top: 0%;
+    height: auto;
+    width: var(--bar-btn-width);
+    padding-left: 5px;
+    padding-right: 5px;
+
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: var(--Bar);
+    color: var(--Disabled);
+
+}
+
+/*center navbar #ico-minmax*/
+navbar #ico-minmax {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    top: 50%;
+    padding: 25%;
+    transform: translateY(-50%);
+    -webkit-app-region: no-drag;
+}
+
+
+
+navbar .btn :hover {
+    background-color: var(--Selection-Background);
+
+}
+
+navbar .lbtn :hover {
+    background-color: var(--Selection-Background);
+
+}
+
+content {
+    position: fixed;
+    display: block;
+    top: var(--bar-height);
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--Background);
+    color: var(--Text);
+    box-sizing: border-box;
+    text-align: left;
+}
+
+content .cntr-taskinp {
+    position: absolute;
+    width: 95%;
+    height: 95%;
+    max-height: 75%;
+    min-height: auto;
+    min-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 15px;
+
+}
+
+content .cntr-taskinp .task-form {
+    background-color: var(--Background);
+    border: 25px;
+    border-color: var(--Bar);
+    border-radius: 5px;
+}
+
+content .taskinp {
+    padding: 2%;
+}
+
+content .taskinp label {
+    display: flex;
+    width: 50%;
+}
+
+content .taskinp input {
+    background-color: var(--Second-Background);
+    display: flexbox;
+    border: none;
+    outline: none;
+    color: var(--Text);
+    font-size: 1em;
+    font-weight: lighter;
+}
+
+content .taskinp textarea {
+    background-color: var(--Second-Background);
+    display: flexbox;
+    border: none;
+    outline: none;
+    color: var(--Text);
+    font-size: 1em;
+    font-weight: lighter;
+    width: 100%;
+    height: 100px;
+    min-height: 100px;
+    resize: vertical;
+    max-height: 250px;
+    font: var(--font);
+}
+
+content .taskinp span {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+content .taskinp .inp-data {
+    display: flex;
+    right: 0%;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    font: var(--font);
+    color: var(--Text);
+}
+
+content .taskinp .taskinp-btns {
+    display: flex;
+    float: left;
+}
+
+content .taskinp input .inp-sub {
+    width: 25%;
+    height: 100%;
+    border: 5px;
+    border-radius: 5px;
+    outline: none;
+    background-color: var(--Second-Background);
+    color: var(--Text);
+    box-sizing: border-box;
+    text-align: left;
+}
+
+content .taskinp input .inp-close {
+    width: 25%;
+    height: 100%;
+    border: 5px;
+    border-radius: 5px;
+    outline: none;
+    background-color: var(--Second-Background);
+    ;
+    box-sizing: border-box;
+    text-align: right;
+}
