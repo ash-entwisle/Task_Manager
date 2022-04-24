@@ -27,39 +27,7 @@ function addSpaces(str) {
 }
 
 
-
-// misc toggle functions
-
-function createForm() {
-    return new BrowserWindow({
-        width: 400,
-        height: 200,
-        frame: false,
-        resizable: false,
-        openDevTools: false,
-        webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
-        }
-    });
-}
-
-function OpenForm(data) {
-    // create form window
-    let form = createForm()
-    form.loadFile(format(__dirname, "./view/form/index.html"))
-
-    // gets task data from main
-    ipcRenderer.send("task-fetch", data.heading)
-
-    // on response, send data to task-
-    ipcRenderer.on("task-fetch-r", (e, data) => {
-        form.webContents.send("task-init", data)
-    })
-
-    return form
-}
-        
+   
 
 // basic window functions
 
@@ -122,29 +90,29 @@ document.addEventListener("click", (e) => {
 // checks for any doubleclicks on a task and then opens the form for editing
 
 document.addEventListener("dblclick", (e) => {
+    console.log(e.target.id)
     let heading = addSpaces(e.target.id);
     log(`looking for ${heading}`, locale)
     // check if heading is in tasklist
-    ipcRenderer.send("task-check", heading)
-    if (heading === "" || heading === undefined) {
+    if (heading === "" || heading === undefined || heading === null || heading === "undefined" || heading === "null") {
         return
     }
-
+    
+    log(`"opening form: ${heading}"`)
+    ipcRenderer.send("form-open", heading)
+    /*
+    ipcRenderer.send("task-check", heading)
     ipcRenderer.on("task-check-r", (e, check) => {
         if (check == true) {
             log("getting heading " + heading, locale)
-            // get form data
-            ipcRenderer.send("task-fetch", heading)
-            // on response, launch form with data
-            ipcRenderer.on("task-fetch-r", (e, data) => {
-                log("got task", locale)
-                // open form
-                let form = OpenForm(data)
-            })
+            // open form with heading
+            ipcRenderer.send("form-open", heading)
         } else {
             log("task does not exist", locale)
         }
-    })
+    })*/
+    // clear heading
+    heading = null
 })
 
 
@@ -155,5 +123,4 @@ ipcRenderer.on("test", (e, data) => {
     log("test", locale)
     console.log(data)
 });
-
 

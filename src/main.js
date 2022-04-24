@@ -3,6 +3,7 @@ const os = require("os-utils")
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const url = require('url')
 const path = require('path');
+const { head } = require("request");
 
 const DataStore = require('./lib/storer/storer').DataStore;
 const store = new DataStore();
@@ -17,8 +18,10 @@ if (require('electron-squirrel-startup')) {
 
 // Function to create Splash Loading window
 
+
+
 function windowTemplate(width, height, hidden) {
-  return new BrowserWindow({
+  let window =  new BrowserWindow({
     width: width,
     height: height,
     minWidth: width,
@@ -31,23 +34,31 @@ function windowTemplate(width, height, hidden) {
     frame: false,
     show: hidden
   });
+
+  window.on('closed', () => {
+    window = null;
+
+  });
+
+
+  return window;
 }
 
 // function to create Form Window
-function createForm(){
+function createForm(data){
   log("Creating Form Window", locale)
-  let form = windowTemplate(400, 200, true)
+  let form = windowTemplate(600, 400, true)
   form.loadFile(path.join(__dirname, './view/form/index.html'))
+  //form.webContents.openDevTools();
   return form
 }
 
 // function to create splash window
 function createSplash() {
+  log("Creating Splash Window", locale)
   let splash = windowTemplate(400, 200, true);
   splash.loadFile(path.join(__dirname, './view/preload/index.html'));
-  splash.on('closed', () => {
-    splash = null;
-  }); 
+  //splash.webContents.openDevTools();
   return splash;
 }
 
@@ -115,7 +126,7 @@ app.on("quit", () => {
 
 ipcMain.on("app-ready", (e) => {
   log("app up", locale)
-  BrowserWindow.getFocusedWindow().webContents.send("up");
+  e.webContents.send("up");
 })
 
 
@@ -136,8 +147,9 @@ ipcMain.on('app-minmax', () => {
 
 ipcMain.on('app-close', () => {
   win = BrowserWindow.getFocusedWindow()
-  win.close()
-  app.quit()
+  win.destroy()
+  //win.close()
+  //app.quit()
 });
 
 
@@ -228,10 +240,26 @@ ipcMain.on("task-check", (e, heading) => {
   }
 })
 
-ipcMain.on("form-open", data => {
-  log("form open", locale)
-  let form = createForm(data)
+ipcMain.on("form-open", (e, heading) => {
+  log(`opening form...`, locale)
+  // remove all dashes from heading
+  heading = heading.replace(/-/g, " ")
   
+  if (!store.taskExists(heading)) {
+    log("task does not exist")
+    return
+  }
+  
+  // create form
+  let form = createForm()
+  // get data
+  data = store.getTask(heading)
+
+  // if task exists, send data to form
+  form.on("ready-to-show", () => {
+    console.log(data)
+    form.webContents.send("form-init", data)
+  })
   form.on("closed", () => {
     form = null;
   });
