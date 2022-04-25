@@ -48,7 +48,7 @@ function closeForm() {
     log("\"closeForm\" was clicked")
     // confirm that the user wants to close the form
     if (confirm("Are you sure?")) {
-        FormClose();
+        ipcRenderer.send("win-close")
     } else {
         return
     }
@@ -71,12 +71,12 @@ function submitForm() {
     if (confirm("Are you sure?")) {
         if (edit) {
             log("edit task")
-            ipcRenderer.send("edit-task", data)
+            ipcRenderer.send("task-edit", data)
         } else {
             log("add task")
-            ipcRenderer.send("add-task", data)
+            ipcRenderer.send("task-add", data)
         }
-        FormClose()
+        closeForm()
     } else {
         return
         }
@@ -88,7 +88,7 @@ function submitForm() {
 
 closeapp.addEventListener("click", () => {
     log("\"closeapp\" was clicked")
-    ipcRenderer.send("app-close")
+    closeForm()
 })
 
 reduce.addEventListener("click", () => {

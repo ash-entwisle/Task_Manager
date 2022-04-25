@@ -141,7 +141,7 @@ ipcRenderer.on("task-update", (e, data) => {
     // find a task with the id of data.heading and replace it with the new task
     let task = document.getElementById(data.heading);
     task.innerHTML = formatHTML(data);
-    //refreshTasks();
+    refreshTasks();
 });
 
 

@@ -147,10 +147,16 @@ ipcMain.on('app-minmax', () => {
 
 ipcMain.on('app-close', () => {
   win = BrowserWindow.getFocusedWindow()
-  win.destroy()
+  app.quit()
   //win.close()
   //app.quit()
 });
+
+ipcMain.on("win-close", () => {
+  win = BrowserWindow.getFocusedWindow()
+  win.close()
+})
+
 
 
 // main functions
@@ -178,6 +184,7 @@ ipcMain.on("task-add", (e, data) => {
         store.updateTask(data);
       }
     });
+    e.sender.send("task-refresh")
   }
 });
 
@@ -243,9 +250,12 @@ ipcMain.on("task-check", (e, heading) => {
 ipcMain.on("form-open", (e, heading) => {
   log(`opening form...`, locale)
   // remove all dashes from heading
-  heading = heading.replace(/-/g, " ")
+  if (heading) {
+    heading = heading.replace(/-/g, " ")
+    data = store.getTask(heading)
+  }
   
-  if (!store.taskExists(heading)) {
+  if (!store.taskExists(heading) && heading != undefined) {
     log("task does not exist")
     return
   }
@@ -253,12 +263,12 @@ ipcMain.on("form-open", (e, heading) => {
   // create form
   let form = createForm()
   // get data
-  data = store.getTask(heading)
 
   // if task exists, send data to form
   form.on("ready-to-show", () => {
-    console.log(data)
+    if (heading) {
     form.webContents.send("form-init", data)
+    }
   })
   form.on("closed", () => {
     form = null;
@@ -269,3 +279,5 @@ ipcMain.on("form-open", (e, heading) => {
 ipcMain.on("log", (e, data, locale) => {
   log(data, locale)
 })
+
+// WHAT 
