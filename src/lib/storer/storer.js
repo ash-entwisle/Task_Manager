@@ -1,7 +1,7 @@
 const Store = require('electron-store');
 const store = new Store();
 
-const schema = {
+const schemaa = {
     preferences: {
         type: 'array',
         items: {
@@ -74,7 +74,7 @@ const schema = {
 };
 
 const jsoner = require('./jsoner');
-//const dbm = require('./sqler').dbm;
+const schema = require('./schemer').schema;
 const log = require('../logger/logger').log;
 locale = "storer";
 
@@ -82,7 +82,7 @@ locale = "storer";
 
 class DataStore extends Store {
     constructor() {
-        super(schema)
+        super(schema())
         //this.dbm = new dbm();
         this.tasks = this.get('tasks') || []
         this.preferences = this.get('preferences') || {}

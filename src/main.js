@@ -280,4 +280,3 @@ ipcMain.on("log", (e, data, locale) => {
   log(data, locale)
 })
 
-// WHAT 
