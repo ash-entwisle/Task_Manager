@@ -162,7 +162,14 @@ ipcMain.on("win-close", () => {
 // main functions
 
 
-// function renderAllTasks()
+function refreshTasks() {
+  log("refreshing tasks", locale)
+  for (let i = 0; i < BrowserWindow.getAllWindows().length; i++) {
+    console.log(BrowserWindow.getAllWindows()[i].webContents)
+    BrowserWindow.getAllWindows()[i].webContents.reload();
+    
+  }
+}
 
 
 //  =====   Data CRUD   =====
@@ -174,7 +181,6 @@ ipcMain.on("task-add", (e, data) => {
   if (!store.taskExists(data.heading)) {
     // add task to store
     store.addTask(data);
-    e.sender.send("task-refresh")
   } else {
     // if task is in store, ask for confirmation
     e.sender.send("task-confirm-edit", data.heading)
@@ -184,29 +190,19 @@ ipcMain.on("task-add", (e, data) => {
         store.updateTask(data);
       }
     });
-    e.sender.send("task-refresh")
   }
+  refreshTasks()
 });
 
 // Data Edit (CRUD)
 ipcMain.on("task-edit", (e, data, heading) => {
   log("task edit", locale)
-  // delete task from store if it exists
-  if (store.taskExists(data.heading)) {
-    // if heading exists
-    store.deleteTask(data.heading);
-    store.addTask(data);
+  if (store.taskExists(heading)) {
+    store.updateTask(data, heading)
   } else {
-    // if task doesnt exist, check if user wants to add it
-    e.sender.send("task-confirm-add", data.heading)
-    ipcMain.on("task-confirm-add-r", (e, bool) => {
-      // if confirmed, add task
-      if (bool) {
-        store.addTask(data);
-      }
-    });
+    store.addTask(data);
   }
-  e.sender.send("task-refresh")
+  refreshTasks()
 });
 
 // Data Delete (CRUD) (assume confirmation)
@@ -216,7 +212,7 @@ ipcMain.on("task-delete", (e, data) => {
   if (store.taskExists(data.heading)) {
     store.deleteTask(data.heading);
   }
-  e.sender.send("task-refresh")
+  refreshTasks()
 });
 
 
@@ -245,6 +241,11 @@ ipcMain.on("task-check", (e, heading) => {
     log("task does not exist", locale)
     e.sender.send("task-check-r", false)
   }
+})
+
+ipcMain.on("form-close", (e) => {
+  log("form closed", locale)
+  console.log(BrowserWindow.getAllWindows()[0])
 })
 
 ipcMain.on("form-open", (e, heading) => {
@@ -279,4 +280,6 @@ ipcMain.on("form-open", (e, heading) => {
 ipcMain.on("log", (e, data, locale) => {
   log(data, locale)
 })
+
+
 

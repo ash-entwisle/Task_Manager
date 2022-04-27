@@ -7,12 +7,14 @@ let taskname = document.getElementById("inp-taskname")
 let taskfor = document.getElementById("inp-taskfor")
 let taskdate = document.getElementById("inp-taskdate")
 let taskdesc = document.getElementById("inp-taskdesc")
+let oldHeading = document.getElementById("inp-taskname").value
 let edit = false
 
 const subtask = document.getElementById("inp-tasksubmit")
 const cnltask = document.getElementById("inp-taskcancel")
 const deltask = document.getElementById("inp-taskdelete")
 const cmptask = document.getElementById("inp-taskcomplete")
+
 
 
 const { ipcRenderer } = require("electron")
@@ -22,7 +24,7 @@ const { format } = require("path")
 //const DataStore = require("../../lib/storer/storer").DataStore;
 //const store = new DataStore();
 const getSplash = require("../../lib/splasher/splasher.js").getSplash;
-const locale = "win-main-script";
+const locale = "win-form-script";
 const time = require("../../lib/timer/timer");
 
 // misc formatting functions
@@ -49,6 +51,7 @@ function closeForm() {
     // confirm that the user wants to close the form
     if (confirm("Are you sure?")) {
         ipcRenderer.send("win-close")
+        ipcRenderer.send("form-close")
     } else {
         return
     }
@@ -68,18 +71,13 @@ function getFormData(){
 function submitForm() {
     log("\"submitForm\" was clicked")
     let data = getFormData()
-    if (confirm("Are you sure?")) {
-        if (edit) {
-            log("edit task")
-            ipcRenderer.send("task-edit", data)
-        } else {
-            log("add task")
-            ipcRenderer.send("task-add", data)
-        }
-        closeForm()
+    if (edit) {
+        log("edit task")
+        ipcRenderer.send("task-edit", data, oldHeading)
     } else {
-        return
-        }
+        log("add task")
+        ipcRenderer.send("task-add", data)
+    }
 }
 
 
@@ -108,6 +106,7 @@ closeapp.addEventListener("click", () => {
 subtask.addEventListener("click", () => {
     log("\"subtask\" was clicked")
     submitForm()
+    closeForm()
 })
 
 cnltask.addEventListener("click", () => {

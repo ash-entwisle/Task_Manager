@@ -1,77 +1,4 @@
 const Store = require('electron-store');
-const store = new Store();
-
-const schemaa = {
-    preferences: {
-        type: 'array',
-        items: {
-            type: 'object',
-            properties: {
-                notify: {
-                    type: "array",
-                    properties: {
-                        enabled: {
-                            type: "boolean",
-                            default: true
-                        },
-                        interval: {
-                            type: "integer",
-                            default: "60"
-                        },
-                    },
-    
-    
-                }, 
-                colours: {
-                    type: "array",
-                    properties: {
-                        primary: {
-                            type: "string",
-                            default: "#000000"
-                        },
-                    },
-                },
-            },
-        },
-    },
-    tasks: {
-        type: 'array',
-        items: {
-            type: 'object',
-            properties: {
-                heading: {
-                    type: 'string',
-                    minLength: 1,
-                    maxLength: 255,
-                },
-                for: {
-                    type: 'string',
-                    minLength: 1,
-                    maxLength: 255
-                },
-                description: {
-                    type: 'string',
-                    minLength: 1,
-                    maxLength: 255
-                },
-                dueDate: {
-                    type: 'string',
-                    minLength: 1,
-                    maxLength: 255
-                },
-                setDate: {
-                    type: 'string',
-                    minLength: 1,
-                    maxLength: 255
-                },
-                completed: {
-                    type: 'boolean'
-                }
-            },
-            required: ['heading', 'for', 'description', 'dueDate', 'setDate', 'completed']
-        }
-    }
-};
 
 const jsoner = require('./jsoner');
 const schema = require('./schemer').schema;
@@ -87,6 +14,14 @@ class DataStore extends Store {
         this.tasks = this.get('tasks') || []
         this.preferences = this.get('preferences') || {}
     }
+
+    // get preferences
+    getPreferences() {
+        return this.preferences;
+    }
+
+    // need to add rest of pref stuff in
+
 
     // save tasks
     saveTasks() {
@@ -126,17 +61,23 @@ class DataStore extends Store {
     }
 
     // update task
-    updateTask(task) {
+    updateTask(task, heading) {
         log("updating task", locale)
-        const index = this.tasks.findIndex(t => t.heading === task.heading)
-        this.tasks.splice(index, 1, task)
+        // update task from store if there is a task with the same heading
+        if (this.taskExists(heading)) {
+            let index = this.getTaskIndex(heading)
+            this.tasks[index] = task
+        } else {
+            this.addTask(task)
+        }
         this.saveTasks()
     }
 
     // delete task
-    deleteTask(task) {
+    deleteTask(heading) {
         log("deleting task", locale)
-        this.tasks = this.tasks.filter(t => t.heading !== task.heading)
+        const index = this.tasks.findIndex(t => t.heading === heading)
+        this.tasks.splice(index, 1)   
         this.saveTasks()
     }
 
