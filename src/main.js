@@ -249,6 +249,12 @@ ipcMain.on("form-close", (e) => {
 
 ipcMain.on("form-open", (e, heading) => {
   log(`opening form...`, locale)
+
+  // if 2 or more windows are open, send "err-form-open" to renderer
+  if (BrowserWindow.getAllWindows().length > 1) {
+    e.sender.send("err-form-open")
+  } 
+
   // remove all dashes from heading
   if (heading) {
     heading = heading.replace(/-/g, " ")

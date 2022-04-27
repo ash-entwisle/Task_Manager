@@ -45,8 +45,6 @@ function enableEdit(heading) {
     cnltask.style.display = "inline-block"
     deltask.style.display = "inline-block"
     cmptask.style.display = "inline-block"
-    ttltask.innerHTML = "Editing Task: " + heading
-    ttlwind.innerHTML = "Editing Task: " + heading
     edit = true
 }
 
@@ -128,13 +126,20 @@ document.addEventListener("keydown", (e) => {
 
 // on "form-init" set form fields to values provided
 ipcRenderer.on("form-init", (e, data) => {
+
+    if (data == null || data == undefined) {
+        return
+    }
+
     log("\"form-init\" was received")
     console.log(document.getElementById("inp-taskname").value)
     taskname.value = data.heading
     taskfor.value = data.whoFor
     taskdate.value = data.dueDate
     taskdesc.value = data.description
-    enableEdit()
+    ttltask.innerHTML = "Editing Task: " + data.heading
+    ttlwind.innerHTML = "Editing Task: " + data.heading
+    enableEdit(task.heading)
 })
 
 console.log(edit)
