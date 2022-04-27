@@ -165,7 +165,6 @@ ipcMain.on("win-close", () => {
 function refreshTasks() {
   log("refreshing tasks", locale)
   for (let i = 0; i < BrowserWindow.getAllWindows().length; i++) {
-    console.log(BrowserWindow.getAllWindows()[i].webContents)
     BrowserWindow.getAllWindows()[i].webContents.reload();
     
   }

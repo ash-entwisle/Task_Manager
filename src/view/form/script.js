@@ -14,6 +14,8 @@ const subtask = document.getElementById("inp-tasksubmit")
 const cnltask = document.getElementById("inp-taskcancel")
 const deltask = document.getElementById("inp-taskdelete")
 const cmptask = document.getElementById("inp-taskcomplete")
+const ttltask = document.getElementById("btn-tasktitle")
+const ttlwind = document.getElementById("title")
 
 
 
@@ -38,11 +40,13 @@ function addSpaces(str) {
     return str.replace(/-/g, " ")
 }
 
-function enableEdit() {
+function enableEdit(heading) {
     // hide subtask, show svetask, show deltask, show cmptask
     cnltask.style.display = "inline-block"
     deltask.style.display = "inline-block"
     cmptask.style.display = "inline-block"
+    ttltask.innerHTML = "Editing Task: " + heading
+    ttlwind.innerHTML = "Editing Task: " + heading
     edit = true
 }
 
