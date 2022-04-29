@@ -70,15 +70,14 @@ document.addEventListener("keydown", (e) => {
 })
 
 
-// sets form data
+// IPC commands
 
-ipcRenderer.on("task-fetch-response", (e, data) => {
-    log("got task", locale)
-    //console.log(data)
-    // set the form to open
-    FormOpen(data);
+ipcRenderer.on("pref-init", (e, data) => {
+    log("pref-init", locale)
+})
 
-});
+
+
 
 // checks if anything but the form is clicked, then toggles the form
 

@@ -80,6 +80,7 @@ function submitForm() {
         log("add task")
         ipcRenderer.send("task-add", data)
     }
+    ipcRenderer.send("win-close")
 }
 
 

@@ -7,6 +7,8 @@ const { head } = require("request");
 
 const DataStore = require('./lib/storer/storer').DataStore;
 const store = new DataStore();
+
+const renderer = require('./lib/renderer/renderer')
 const log = require('./lib/logger/logger').log;
 let locale = "main";
 
@@ -16,68 +18,12 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-// Function to create Splash Loading window
-
-
-
-function windowTemplate(width, height, hidden) {
-  let window =  new BrowserWindow({
-    width: width,
-    height: height,
-    minWidth: width,
-    minHeight: height,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    },
-    autoHideMenuBar: true,
-    frame: false,
-    show: hidden
-  });
-
-  window.on('closed', () => {
-    window = null;
-
-  });
-
-
-  return window;
-}
-
-// function to create Form Window
-function createForm(data){
-  log("Creating Form Window", locale)
-  let form = windowTemplate(600, 400, true)
-  form.loadFile(path.join(__dirname, './view/form/index.html'))
-  //form.webContents.openDevTools();
-  return form
-}
-
-// function to create splash window
-function createSplash() {
-  log("Creating Splash Window", locale)
-  let splash = windowTemplate(400, 200, true);
-  splash.loadFile(path.join(__dirname, './view/preload/index.html'));
-  //splash.webContents.openDevTools();
-  return splash;
-}
-
-// Function to create Main Window
-function createMain(){
-  log("window created", locale)  
-  const mainWindow = windowTemplate(800, 600, false);
-  mainWindow.loadFile(path.join(__dirname, './view/main/index.html'));
-  mainWindow.webContents.openDevTools();
-  return mainWindow;
-
-};
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  let splash = createSplash();
-  let main = createMain();
+  let splash = renderer.createSplash();
+  let main = renderer.createMain();
 
   //show splash, when main is on ready-to-show, destroy splash
   main.on('ready-to-show', () => {
@@ -107,7 +53,7 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createMain();
+    renderer.createMain();
   }
 });
 
@@ -166,7 +112,6 @@ function refreshTasks() {
   log("refreshing tasks", locale)
   for (let i = 0; i < BrowserWindow.getAllWindows().length; i++) {
     BrowserWindow.getAllWindows()[i].webContents.reload();
-    
   }
 }
 
@@ -267,7 +212,7 @@ ipcMain.on("form-open", (e, heading) => {
   }
   
   // create form
-  let form = createForm()
+  let form = renderer.createForm()
   // get data
 
   // if task exists, send data to form
@@ -285,6 +230,5 @@ ipcMain.on("form-open", (e, heading) => {
 ipcMain.on("log", (e, data, locale) => {
   log(data, locale)
 })
-
 
 

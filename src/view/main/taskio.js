@@ -25,6 +25,23 @@ function remSpaces(str) {
     return str.replace(/\s/g, "-")
 }
 
+function conf() {
+    return confirm("Are you sure?")
+}
+
+
+function notify() {
+    log("notify")
+    const notify = new Notification("Task Added", {
+        body: "Task added to list"
+    })
+    notify.onclick = () => {
+        log("notify clicked")
+    }
+}
+
+
+
 function refreshTasks() {
     log("refreshing tasks")
     let taskList = document.getElementById("cntr-tasklist");
@@ -153,8 +170,13 @@ ipcRenderer.on("task-refresh", (e, data) => {
 
 
 // initial functions
+function main() {
+    log("taskIO.js loaded")
+    notify()
+    refreshTasks();
+}
 
-refreshTasks();
+main();
 
 
 
