@@ -1,8 +1,8 @@
 {
-  "name": "begginer",
-  "productName": "begginer",
+  "name": "taskapp",
+  "productName": "taskapp",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "stuff",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -24,7 +24,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "begginer"
+            "name": "taskapp"
           }
         },
         {
@@ -47,10 +47,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.0.1",
-    "os-utils": "^0.0.14",
-    "request": "^2.88.2",
-    "sqlite3": "^4.2.0"
+    "electron-store": "^8.0.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.61",
