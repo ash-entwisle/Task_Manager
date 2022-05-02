@@ -1,5 +1,3 @@
-const minmax = document.getElementById("btn-minmax")
-const reduce = document.getElementById("btn-reduce")
 const closeapp = document.getElementById("btn-closeapp")
 
 let name = document.getElementById("username")
@@ -82,15 +80,6 @@ closeapp.addEventListener("click", () => {
     closePref()
 })
 
-reduce.addEventListener("click", () => {
-    log("window reduced")
-    ipcRenderer.send("app-reduce")
-})
-
-minmax.addEventListener("click", () => {
-    log("window minmaxed")
-    ipcRenderer.send("app-minmax")
-})
 
 btnsave.addEventListener("click", (e) => {
     log("\"subtask\" was clicked")

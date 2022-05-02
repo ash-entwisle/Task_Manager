@@ -60,6 +60,7 @@ ipcMain.on('app-minmax', () => {win = BrowserWindow.getFocusedWindow()
 });
 
 
+
 // main functions
 
 

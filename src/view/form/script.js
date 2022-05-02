@@ -9,6 +9,7 @@ let taskdate = document.getElementById("inp-taskdate")
 let taskdesc = document.getElementById("inp-taskdesc")
 let oldHeading = document.getElementById("inp-taskname").value
 let edit = false
+let completed = false
 
 const subtask = document.getElementById("inp-tasksubmit")
 const cnltask = document.getElementById("btn-taskcancel")
@@ -162,7 +163,7 @@ deltask.addEventListener("click", () => {
 
 cmptask.addEventListener("click", (e) => {
     log("\"cmptask\" was clicked")
-    if (submitForm(true)) {
+    if (submitForm(!completed)) {
         log("completing task")
     } else {
         e.preventDefault()
@@ -191,15 +192,25 @@ ipcRenderer.on("form-init", (e, data) => {
     taskdesc.value = data.description
     ttltask.innerHTML = "Editing Task: " + data.heading
     ttlwind.innerHTML = "Editing Task: " + data.heading
-    
+
     oldHeading = data.heading
     cnltask.style.display = "inline-block"
     deltask.style.display = "inline-block"
     cmptask.style.display = "inline-block"
+    deltask.style.color = "#F07178"
+
+    if (data.completed) {
+        cmptask.value = "completed"
+        cmptask.style.color = "#98C379"
+        completed = true
+    } else {
+        cmptask.value = "incomplete"
+        cmptask.style.color = "#F07178"
+        completed = false
+    }
     edit = true
 })
 
-console.log(oldHeading)
 // ipc test function (pingpong)
 
 ipcRenderer.on("test", (e, data) => {
