@@ -1,10 +1,4 @@
-const os = require("os-utils")
-//const getSplash = require('./lib/splasher/splasher')
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
-const url = require('url')
-const path = require('path');
-const { head } = require("request");
-
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const DataStore = require('./lib/storer/storer').DataStore;
 const store = new DataStore();
 
@@ -14,102 +8,56 @@ const log = require('./lib/logger/logger').log;
 let locale = "main";
 
 
+// misc boilerplate code
+if (require('electron-squirrel-startup')) {app.quit();}
 
-if (require('electron-squirrel-startup')) { 
-  app.quit();
-}
+app.on('window-all-closed', () => {log("all windows closed", locale)
+  if (process.platform !== 'darwin') {app.quit();}
+});
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+app.on('activate', () => {log("app activated", locale)
+  if (BrowserWindow.getAllWindows().length === 0) {renderer.createMain();}
+});
+
+
+// on ready, run these functions
 app.on('ready', () => {
+  // initialise main window and splash window
   let splash = renderer.createSplash();
   let main = renderer.createMain();
-
   //show splash, when main is on ready-to-show, destroy splash
   main.on('ready-to-show', () => {
     main.webContents.send("init", store.preferences);
     splash.destroy();
     main.show();
-    
   });
-
   log("app ready", locale)
 });
 
 
+// if backup is enabled, create a backup of store every time the app is closed
+app.on("quit", () => {log("app quit", locale)
+  if (store.preferences.backup) {store.exportStore(`./src/data/backup/${timer.timestamp()}.json`);}
+})
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  log("all windows closed", locale)
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-log("main script loaded", locale)
-app.on('activate', () => {
-  log("activate", locale)
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    renderer.createMain();
-  }
-});
-
-// logs when app quits
-
-app.on("quit", () => {
-  log("app quit", locale)
-  if (store.preferences.backup) {
-    store.exportStore(`./src/data/backup/${timer.timestamp()}.json`);
-  }
+// when app is readuy, tell windows the app is up
+ipcMain.on("app-ready", (e) => {log("app up", locale)
+  e.webContents.send("up");                       // tell main window app is up
+  e.webContents.send("init", store.preferences);  // gives main window preferences
+  e.webContents.send("notify")                    // tells main window to show notification if enabled
 })
 
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
-
-// system functions
-
-
-ipcMain.on("app-ready", (e) => {
-  log("app up", locale)
-  e.webContents.send("up");
-  e.webContents.send("init", store.preferences);
-  e.webContents.send("notify")
-})
-
-
-
-ipcMain.on('app-reduce', () => {
-  win = BrowserWindow.getFocusedWindow()
-  win.minimize()
+// on app-close, close all windows
+ipcMain.on('app-close', () => {app.quit()});
+// on app-reduce, reduce all windows
+ipcMain.on('app-reduce', () => {BrowserWindow.getFocusedWindow().minimize()});
+// on window-close, close current window
+ipcMain.on("win-close", () => {BrowserWindow.getFocusedWindow().close()});
+// on minmax, toggle window state
+ipcMain.on('app-minmax', () => {win = BrowserWindow.getFocusedWindow()
+  if (win.isMaximized()) {win.unmaximize()} else {win.maximize()}
 });
-
-ipcMain.on('app-minmax', () => {
-  win = BrowserWindow.getFocusedWindow()
-  if (win.isMaximized()) {
-    win.unmaximize()
-  } else {
-    win.maximize()
-  }
-});
-
-ipcMain.on('app-close', () => {
-  win = BrowserWindow.getFocusedWindow()
-  app.quit()
-  //win.close()
-  //app.quit()
-});
-
-ipcMain.on("win-close", () => {
-  win = BrowserWindow.getFocusedWindow()
-  win.close()
-})
-
 
 
 // main functions
@@ -121,6 +69,7 @@ function refreshTasks() {
     BrowserWindow.getAllWindows()[i].webContents.reload();
   }
 }
+
 
 
 //  =====   Data CRUD   =====
