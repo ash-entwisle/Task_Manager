@@ -2,10 +2,10 @@ const minmax = document.getElementById("btn-minmax")
 const reduce = document.getElementById("btn-reduce")
 const closeapp = document.getElementById("btn-closeapp")
 const closeform = document.getElementById("inp-taskclose")
-const taskheading = document.getElementById("inp-taskname")
-const taskinp = document.getElementById("cntr-taskinp")
+const newbtn = document.getElementById("btn-new")
+const cogbtn = document.getElementById("btn-cog")
 
-const { ipcRenderer, BrowserWindow, ipcMain } = require("electron")
+const { ipcRenderer, BrowserWindow, ipcMain, dialog } = require("electron")
 const fs = require("fs")
 const { format } = require("path")
 
@@ -13,7 +13,7 @@ const { format } = require("path")
 //const store = new DataStore();
 const getSplash = require("../../lib/splasher/splasher.js").getSplash;
 const locale = "win-main-script";
-const time = require("../../lib/timer/timer");
+const timer = require("../../lib/timer/timer");
 
 // misc formatting functions
 
@@ -25,6 +25,18 @@ function addSpaces(str) {
     // replace "-" with " "
     return str.replace(/-/g, " ")
 }
+
+function err(msg) {
+    log("notify")
+    const notify = new Notification("Error:", {
+        body: msg,
+        requireInteraction: false
+    })
+    notify.onclick = () => {
+        log("notify clicked")
+    }
+}
+
 
 
    
@@ -47,36 +59,84 @@ minmax.addEventListener("click", () => {
     ipcRenderer.send("app-minmax")
 })
 
-closeform.addEventListener("click", () => {
-    log("\"closeForm\" was clicked")
-    // confirm that the user wants to close the form
-    if (confirm("Are you sure?")) {
-        FormClose();
-    } else {
-        return
-    }
+newbtn.addEventListener("click", () => {
+    log("opening form from btn")
+    ipcRenderer.send("form-open")
 })
+
+cogbtn.addEventListener("click", () => {
+    log("opening preferences from btn")
+    ipcRenderer.send("pref-open")   
+})
+
+
 
 // show/hide task input (and other keybinds)
 
 document.addEventListener("keydown", (e) => {
+    // log(`keydown: ${e.keyCode}`, locale)
     // listen for CTRL+N and then show the new task form
     if (e.ctrlKey && e.keyCode === 78) {
         log("CTRL+N pressed", locale)
         ipcRenderer.send("form-open")
                 
     }
+
+    // on ctrl shift e, open export window
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 69) {
+        log("CTRL+SHIFT+E pressed", locale)
+        ipcRenderer.send("export-open")
+    }
+
+    // on ctrl shift o, open import window
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 88) {
+        log("CTRL+SHIFT+O pressed", locale)
+        ipcRenderer.send("import-open")
+    }
+
+    // on ctrl shift  p , open preferences window
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 80) {
+        log("CTRL+SHIFT+P pressed", locale)
+        ipcRenderer.send("pref-open")
+    }
+
     
 })
 
 
 // IPC commands
 
-ipcRenderer.on("pref-init", (e, data) => {
-    log("pref-init", locale)
+ipcRenderer.on("init", (e, data) => {
+    log("\"init\" was received")
+    log(`notify: ${data.notify.enabled} from: ${data.notify.from} to: ${data.notify.to}`, locale)
+
+    if (data.notify.enabled) {
+        ipcRenderer.send("notify");
+    }
+
+    setInterval(() => {
+        let now = timer.getFormatTime();
+        if (now >= data.notify.from && now <= data.notify.to && data.notify.enabled) {
+            ipcRenderer.send("notify")
+        }
+    },
+        data.notify.interval * 6000)
 })
 
+ipcRenderer.on("error", (e, data) => {
+    err(data)    
+})
 
+ipcRenderer.on("notify-r", (e, data) => {
+    log("notify time")
+    const notify = new Notification("Notification:", {
+        body: `Hey ${data.name}! You have ${data.incomplete} tasks to complete and ${data.overdue} tasks overdue.`,
+        requireInteraction: false
+    })
+    notify.onclick = () => {
+        log("notify clicked")
+    }
+})
 
 
 // checks if anything but the form is clicked, then toggles the form
@@ -123,3 +183,9 @@ ipcRenderer.on("test", (e, data) => {
     console.log(data)
 });
 
+
+
+// if pref.notify.enabled is true, then show a notification every pref.notify.interval
+// from the pref.notify.start time to the pref.notify.end time
+
+// check time every min or so, and if it's within the notify time, then show a notification and wait interva

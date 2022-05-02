@@ -1,4 +1,4 @@
-:root{
+:root {
     min-width: 750px;
     overflow-x: hidden;
 
@@ -34,12 +34,12 @@
 
     --padding: 5px;
     --bar-height: 30px;
-    --bar-btn-width:35px;
+    --bar-btn-width: 35px;
 
-    --font: 20px/1.2em 'segoue UI',sans-serif;
+    --font: 20px/1.2em 'segoue UI', sans-serif;
 
     font: var(--font);
-    background-color: var(--Background);
+    background-color: var(--BG);
 }
 
 
@@ -51,7 +51,7 @@ navbar {
     /* Prevent user from selecting things */
     user-select: none;
     position: fixed;
-    top:0%;
+    top: 0%;
     height: auto;
     background-color: var(--Bar);
     width: 100%;
@@ -64,24 +64,24 @@ navbar {
 navbar .icon {
     float: left;
     -webkit-app-region: drag;
-    -webkit-user-select: none;
     color: var(--Disabled)
 }
-navbar .btn{
-    -webkit-app-region:no-drag;
+
+navbar .btn {
+    -webkit-app-region: no-drag;
     float: right;
-    top:50%;
+    top: 0%;
     height: auto;
     width: var(--bar-btn-width);
-    padding-left: 10px;
+    padding-left: 5px;
     padding-right: 5px;
-    
+
     border: none;
     outline: none;
     cursor: pointer;
     background-color: var(--Bar);
     color: var(--Disabled);
-    
+
 }
 
 navbar .lbtn {
@@ -89,15 +89,14 @@ navbar .lbtn {
     float: left;
     top:50%;
     padding-top: 2px;
-    cursor: pointer;
-    
+
     height: 100%;
     width: auto;
     font-weight: lighter;
     font-size: smaller;
-    padding-left: 10px;
+    padding-left: 5px;
     padding-right: 5px;
-    
+
     border: none;
     outline: none;
     background-color: var(--Bar);
@@ -106,7 +105,7 @@ navbar .lbtn {
 }
 
 /*center navbar #ico-minmax*/
-navbar #ico-minmax{
+navbar #ico-minmax {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -123,8 +122,9 @@ navbar .btn :hover {
 
 }
 
-navbar .lbtn :hover, :focus {
+navbar .lbtn :hover {
     background-color: var(--Selection-Background);
+
 }
 
 content {
@@ -133,143 +133,89 @@ content {
     top: var(--bar-height);
     left: 0%;
     width: 100%;
-    height: 95%;
-    padding-bottom: 10px;
+    height: 100%;
     background-color: var(--Background);
     color: var(--Text);
     box-sizing: border-box;
     text-align: left;
-    overflow-y: auto;
 }
 
-/* width */
-content ::-webkit-scrollbar {
-    width: 5px;
-    height: 95%;
-
-    bottom: 0%;
-}
-
-
-content .task-grid {
-    display: flex;
-    margin: 15px;
-}
-
-content .task-card {
-    background-color: var(--BG);
-    margin: 15px;
-    padding: 5px;
-    border: 2px solid;
-    border-radius: 10px;
-    border-color: var(--BG);
-}
-
-content .task-grid .task-id {
-    display: inline-block;
-    border: 5px solid transparent;
-    width: auto;
-    min-width: 250px;
-}
-
-content .task-grid .task-id .task-heading {
-    width: 100%;
-    text-align: left;
-    font-weight: bold;
-}
-
-content .task-grid .task-id .task-whowhen {
-    width: auto;
-    max-width: 250px;
-    text-align: left;
-    font-weight: lighter;
-}
-
-content .task-grid .task-description {
-    width: fit-content;
-    right: 5%;
-    min-width: 250px;
-    text-align: left;
-}
-
-content .task-grid .task-btns {
-    visibility: hidden;
-    float: right;
-    margin-right: 15px;
-}
-
-
-content .cnrt-tasklist {
-    display: flex;
-    flex-direction: column;
-    margin: 15px;
-    width: 50%;
-}
-
-content .cntr-taskinp {
+content .cntr-prefinp {/*
     position: absolute;
-    display: none;
-    width: 25%;
-    height: 50%;
+    width: 95%;
+    height: 95%;
     max-height: 75%;
     min-height: auto;
     min-width: 500px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin: 15px;
-    
+    margin: 15px;*/
+
 }
 
-content .cntr-taskinp .task-form {
+content .cntr-prefinp .pref-form {
     background-color: var(--Background);
-    border: 25px;
+    border: 5px;
     border-color: var(--Bar);
-    box-shadow: 0 0 10px #000;
     border-radius: 5px;
+    padding-left: 5px;
 }
 
-content .taskinp {
-    padding: 2%;
+content .pref {
+    padding: 5px;
 }
 
-content .taskinp label {   
+content .prefinp {
+    padding: 5px 25px 10px 25px;
     display: flex;
+    flex-wrap: row wrap;
+}
+
+content .prefinp label {
+    display: flex;
+    flex-direction: row;
     width: 50%;
 }
 
-content .taskinp input {
+
+content .prefinp input {
     background-color: var(--Second-Background);
+    background-color: var(--sec);
     display: flexbox;
+    width: 50%;
     border: none;
     outline: none;
-    color: var(--Text);
-    font-size: 1em;
+    color: var(--Disabled);
+    font-size: 0.9em;
+    font-weight: lighter;
+    justify-content: center;
+}
+
+content .prefinp input[type="button"] {
+    background-color: var(--Second-Background);
+}
+
+content .prefinp input[type="submit"] {
+    background-color: var(--Second-Background);
+    width: 20%;
+}
+
+content .prefinp input[type="text"] {
+    background-color: var(--Second-Background);
+    color: var(--Disabled);
+    font-size: 0.9em;
     font-weight: lighter;
 }
 
-content .taskinp textarea {
+content .prefinp input[type="time"] {
     background-color: var(--Second-Background);
-    display: flexbox;
-    border: none;
-    outline: none;
-    color: var(--Text);
-    font-size: 1em;
+    color: var(--Disabled);
+    font-size: 0.9em;
     font-weight: lighter;
-    width: 100%;
-    height: 100px;
-    min-height: 100px;
-    resize: vertical;
-    max-height: 250px;
-    font : var(--font);
 }
 
-content .taskinp span {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-content .taskinp .inp-data {
+content .prefinp .inp-data {
     display: flex;
     right: 0%;
     width: 100%;
@@ -303,7 +249,16 @@ content .taskinp input .inp-close {
     border: 5px;
     border-radius: 5px;
     outline: none;
-    background-color: var(--Second-Background);;
+    background-color: var(--Second-Background);
+    ;
     box-sizing: border-box;
     text-align: right;
+}
+
+content #btn-taskdelete {display: none;}
+content #btn-taskcomplete {display: none;}
+
+content input:hover {
+    cursor: pointer;
+    color: var(--Text);
 }

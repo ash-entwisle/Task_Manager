@@ -142,13 +142,43 @@ submitForm.addEventListener("click", (event) => {
 
 // appends a new tasj to the task list
 
-ipcRenderer.on("task-render", (e, data) => {
+ipcRenderer.on("task-render", (e, data, preferences) => {
     log(`add-task: ${data.heading}`)
     let taskList = document.getElementById("cntr-tasklist");
-    // append task to taskList with the class of task-accordion and the id of data.heading
-    // inside a <a> with the class task-padding
-    taskList.innerHTML += `<a class="task-padding" id="${data.heading}">${formatHTML(data)}</a>`
-            
+    // if the data is not overdue AND the task is not completed, add it to the list
+    console.log(data.overdue, data.completed)
+    if (!data.overdue && !data.completed) {
+        taskList.innerHTML += `<a class="task-padding" id="${remSpaces(data.heading)}">${formatHTML(data)}</a>`
+    }
+    // if the data is overdue, check if preferences are set to show overdue tasks and set the border color to red
+    if (data.overdue && preferences.showOverdue) {
+        log(`overdue task: ${data.heading}`)
+        taskList.innerHTML += `<a class="task-padding" id="${remSpaces(data.heading)}">${formatHTML(data)}</a>`
+        document.getElementById(remSpaces(data.heading)).children[0].children[0].style.borderColor = "#F07178";
+    }
+    // if the data is completed, check if preferences are set to show completed tasks and set the border color to green
+    if (data.completed && preferences.showCompleted) {
+        log(`completed task: ${data.heading}`)
+        taskList.innerHTML += `<a class="task-padding" id="${remSpaces(data.heading)}">${formatHTML(data)}</a>`
+        document.getElementById(remSpaces(data.heading)).children[0].children[0].style.borderColor = "#98C379";
+    }
+
+
+
+    /*
+    if (!data.overdue === preferences.showOverdue && !data.completed === preferences.showCompleted) { 
+        log(`adding task: ${data.heading}`)
+        // get div with a class of task-card
+        console.log(data)
+        if (data.completed) {
+            taskCard.style.borderColor = "#2979ff";
+        }
+        if (data.overdue) {
+            taskCard.style.borderColor = "#F07178";
+        }
+
+    }*/
+    
 });
 
 // edits a task based on heading
@@ -172,11 +202,12 @@ ipcRenderer.on("task-refresh", (e, data) => {
 // initial functions
 function main() {
     log("taskIO.js loaded")
-    notify()
+    //notify()
     refreshTasks();
 }
 
 main();
+
 
 
 

@@ -11,9 +11,9 @@ let oldHeading = document.getElementById("inp-taskname").value
 let edit = false
 
 const subtask = document.getElementById("inp-tasksubmit")
-const cnltask = document.getElementById("inp-taskcancel")
-const deltask = document.getElementById("inp-taskdelete")
-const cmptask = document.getElementById("inp-taskcomplete")
+const cnltask = document.getElementById("btn-taskcancel")
+const deltask = document.getElementById("btn-taskdelete")
+const cmptask = document.getElementById("btn-taskcomplete")
 const ttltask = document.getElementById("btn-tasktitle")
 const ttlwind = document.getElementById("title")
 
@@ -40,47 +40,79 @@ function addSpaces(str) {
     return str.replace(/-/g, " ")
 }
 
-function enableEdit(heading) {
-    // hide subtask, show svetask, show deltask, show cmptask
-    cnltask.style.display = "inline-block"
-    deltask.style.display = "inline-block"
-    cmptask.style.display = "inline-block"
-    edit = true
-}
-
 function closeForm() {
     log("\"closeForm\" was clicked")
-    // confirm that the user wants to close the form
     if (confirm("Are you sure?")) {
         ipcRenderer.send("win-close")
         ipcRenderer.send("form-close")
-    } else {
-        return
-    }
+        return true
+    } 
 }
 
-function getFormData(){
-    return {
+function getFormData(complete = false) {
+
+    let data = {
         heading: document.getElementById("inp-taskname").value,
         whoFor: document.getElementById("inp-taskfor").value,
         description: document.getElementById("inp-taskdesc").value,
         setDate: time.getFormatDate(),
         dueDate: document.getElementById("inp-taskdate").value,
-        completed: false
+        completed: complete
     }
+
+    
+    
+    
+    // make sure setdate and header are not empty
+    if (data.heading === "" || data.heading === undefined || data.setDate === "" || data.setDate === undefined) {
+        alert("Please enter a task name and set a due date")
+        return
+    }
+
+    // if heading is empty or already exists, return false
+    if (data.heading == "" || data.heading == undefined || data.heading == null) {
+        alert("Task name cannot be empty")
+        return
+    }
+    // check if task due date is in the past where date is formatted as YYYY-MM-DD
+    if (data.dueDate < data.setDate) {
+        alert("Task due date cannot be in the past")
+        return
+    }
+    
+    return data
 }
 
-function submitForm() {
+function submitForm(complete = false) {
     log("\"submitForm\" was clicked")
-    let data = getFormData()
-    if (edit) {
-        log("edit task")
-        ipcRenderer.send("task-edit", data, oldHeading)
-    } else {
-        log("add task")
-        ipcRenderer.send("task-add", data)
+    let data = getFormData(complete)
+    if (data === undefined) {
+        return
     }
-    ipcRenderer.send("win-close")
+
+    ipcRenderer.send("task-check", oldHeading)
+    ipcRenderer.on("task-check-r", (e, exists) => {
+        if (exists || data.heading == oldHeading) {
+            log("task exists")
+            if (confirm(`${data.heading} already exists. Overwrite?`)) {
+                ipcRenderer.send("task-edit", data, oldHeading)
+                ipcRenderer.send("form-close")
+                ipcRenderer.send("win-close")
+            } else {
+                return
+            }
+        } else {
+            log(`${oldHeading} does not exist`)
+            if (confirm("Save Task?")) {
+                ipcRenderer.send("task-add", data)
+                ipcRenderer.send("form-close")
+                ipcRenderer.send("win-close")
+            } else {
+                return 
+            }
+        }
+    })
+    return data
 }
 
 
@@ -102,20 +134,40 @@ minmax.addEventListener("click", () => {
     ipcRenderer.send("app-minmax")
 })
 
-closeapp.addEventListener("click", () => {
-    closeForm()
-})
-
-subtask.addEventListener("click", () => {
+subtask.addEventListener("click", (e) => {
     log("\"subtask\" was clicked")
-    submitForm()
-    closeForm()
+    // if e does not return a value, then the form is empty and prevents the task from being added
+    if (submitForm()) {
+        log("adding task")
+    } else {
+        e.preventDefault()
+    }
 })
 
 cnltask.addEventListener("click", () => {
+    log("\"cnltask\" was clicked")
     closeForm()
 })
 
+deltask.addEventListener("click", () => {
+    log("\"deltask\" was clicked")
+    if (edit === true) {
+        if (confirm("Are you sure?")) {
+            ipcRenderer.send("task-delete", oldHeading)
+            ipcRenderer.send("form-close")
+            ipcRenderer.send("win-close")
+        }
+    } 
+})
+
+cmptask.addEventListener("click", (e) => {
+    log("\"cmptask\" was clicked")
+    if (submitForm(true)) {
+        log("completing task")
+    } else {
+        e.preventDefault()
+    }
+})
 
 // show/hide task input (and other keybinds)
 
@@ -133,17 +185,21 @@ ipcRenderer.on("form-init", (e, data) => {
     }
 
     log("\"form-init\" was received")
-    console.log(document.getElementById("inp-taskname").value)
     taskname.value = data.heading
     taskfor.value = data.whoFor
     taskdate.value = data.dueDate
     taskdesc.value = data.description
     ttltask.innerHTML = "Editing Task: " + data.heading
     ttlwind.innerHTML = "Editing Task: " + data.heading
-    enableEdit(task.heading)
+    
+    oldHeading = data.heading
+    cnltask.style.display = "inline-block"
+    deltask.style.display = "inline-block"
+    cmptask.style.display = "inline-block"
+    edit = true
 })
 
-console.log(edit)
+console.log(oldHeading)
 // ipc test function (pingpong)
 
 ipcRenderer.on("test", (e, data) => {

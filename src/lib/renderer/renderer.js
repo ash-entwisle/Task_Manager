@@ -6,7 +6,10 @@ let locale = "renderer"
 
 // tenplate window create function
 function windowTemplate(win, width, height, hidden) {
-    // Create the browser window.
+    // Create the browser window.   
+    if (BrowserWindow.getAllWindows().length > 1) {
+        return
+    } 
     let window = new BrowserWindow({ 
         width: width, height: height, minWidth: width, minHeight: height,
         webPreferences: { nodeIntegration: true, contextIsolation: false },
@@ -26,10 +29,11 @@ function windowTemplate(win, width, height, hidden) {
 
 function createForm() {return windowTemplate("form", 600, 400, true)}
 function createSplash() {return windowTemplate("preload", 400, 200, true);}
-function createMain() {return windowTemplate("main", 800, 600, false);};
+function createMain() {return windowTemplate("main", 800, 650, false);};
+function createPref() {return windowTemplate("preferences", 600, 500, true);}
 
 
-module.exports = { createMain, createForm, createSplash }
+module.exports = { createMain, createForm, createSplash, createPref }
 
 
 

@@ -2,6 +2,7 @@ const Store = require('electron-store');
 
 const jsoner = require('./jsoner');
 const schema = require('./schemer').schema;
+const date = require('../timer/timer').getFormatDate;
 const log = require('../logger/logger').log;
 locale = "storer";
 
@@ -10,29 +11,49 @@ locale = "storer";
 class DataStore extends Store {
     constructor() {
         super(schema())
-        //this.dbm = new dbm();
         this.tasks = this.get('tasks') || []
-        this.preferences = this.get('preferences') || {}
+        this.preferences = this.get('preferences') || {
+            name: "", showCompleted: false, showOverdue: false, backup: true,
+            notify:  {enabled: true, onStartup: true, interval: 60, from: "0800", to: "1700" }
+        }
+
+        this.save()
     }
 
-    // get preferences
-    getPreferences() {
-        return this.preferences;
+    // set store to object if it fits the schema
+    importStore(path) {
+        log("importing store", locale)
+        let obj = jsoner.importJSON(path)
+        try {
+            this.preferences = obj.preferences
+            this.tasks = obj.tasks
+        } catch (err) {
+            log("override failed", locale)
+        }
+        this.save()
     }
 
-    // need to add rest of pref stuff in
-
+    // export store to path as json with a file name
+    exportStore(path) {
+        log("exporting store", locale)
+        jsoner.exportJSON(path, {preferences: this.preferences, tasks: this.tasks})
+    }
 
     // save tasks
-    saveTasks() {
-        log("saving tasks", locale)
+    save() {
+        //log("saving tasks", locale)
         this.set('tasks', this.tasks)
+        this.set('preferences', this.preferences)
     }
 
     // get all tasks
     getTasks() {
         log("getting all tasks", locale)
-        return this.get('tasks') || []
+        // sort all tasks in ascending order by due date formatted as YYYY-MM-DD
+        this.tasks = this.tasks.sort((a, b) => {
+            return new Date(a.dueDate) - new Date(b.dueDate)
+        })  || []
+        return this.tasks
     }
 
     // get task index by title
@@ -61,7 +82,7 @@ class DataStore extends Store {
         } else {
             this.updateTask(task)
         }
-        this.saveTasks()
+        this.save()
     }
 
     // update task
@@ -74,15 +95,45 @@ class DataStore extends Store {
         } else {
             this.addTask(task)
         }
-        this.saveTasks()
+        this.save()
     }
 
     // delete task
     deleteTask(heading) {
         log("deleting task", locale)
-        const index = this.tasks.findIndex(t => t.heading === heading)
-        this.tasks.splice(index, 1)   
-        this.saveTasks()
+        if (this.taskExists(heading)) {
+            const index = this.tasks.findIndex(t => t.heading === heading)
+            this.tasks.splice(index, 1)   
+        }
+        this.save()
+    }
+
+    // check if task is completed
+    isCompleted(heading) {
+        log("checking if task is completed", locale)
+        return this.getTask(heading).completed
+    }
+
+    // complete task
+    completeTask(heading) {
+        log("completing task", locale)
+        this.getTask(heading).completed = true
+        this.save()
+    }
+
+    // check if task is overdue
+    isOverdue(data) {
+        log("checking if task is overdue", locale)
+        let overdue = data.dueDate < date()
+        data.overdue = overdue
+        this.updateTask(data, data.heading)
+        this.save()
+        return data
+    }
+
+    updatePreferences(preferences) {
+        this.preferences = preferences
+        this.save()
     }
 
 }

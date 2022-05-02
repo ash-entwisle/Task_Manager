@@ -1,37 +1,31 @@
 let path = require('path')
 let fs = require('fs')
-const logger = require('../logger/logger')
+const log= require('../logger/logger').log
 const locale = "JSON"
 
 
-function exportJSON (obj) {
+function exportJSON (path, obj) {
     try {
-        let data = JSON.parse(obj)
-        let logpath = "./src/data/exports/" + obj.heading + ".log"
-
-        try {
-            fs.appendFileSync(logpath, ('\n' + data));
-        } catch (err) {
-            console.error(err);
-        };
+        fs.writeFileSync(path, JSON.stringify(obj))
     } catch (error) {
-        logger("erroneous json passed", locale)
-        console.error(error)
+        console.log(error)
+        log("error in exporting object to json", locale)
     }
 
 }
 
 function importJSON (targetPath) {
     try {
-        
+        let data = fs.readFileSync(targetPath)
+        return JSON.parse(data)
     } catch (error) {
-      logger("error in importing object from json", locale)  
+        log("error in importing json", locale)
     }
 }
 
-
-
-
+module.exports = {
+    exportJSON, importJSON
+}
 
 /*
 

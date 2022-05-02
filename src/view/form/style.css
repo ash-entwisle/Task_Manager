@@ -181,6 +181,14 @@ content .taskinp input {
     font-weight: lighter;
 }
 
+content .taskinp input[type="button"] {
+    background-color: var(--Second-Background);
+}
+
+content .taskinp input[type="submit"] {
+    background-color: var(--Second-Background);
+}
+
 content .taskinp input[type="text"] {
     background-color: var(--Second-Background);
     color: var(--Disabled);
@@ -254,4 +262,12 @@ content .taskinp input .inp-close {
     ;
     box-sizing: border-box;
     text-align: right;
+}
+
+content #btn-taskdelete {display: none;}
+content #btn-taskcomplete {display: none;}
+
+content input:hover {
+    cursor: pointer;
+    color: var(--Text);
 }

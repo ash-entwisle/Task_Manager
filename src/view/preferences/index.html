@@ -19,7 +19,7 @@
                         d="m12.5 3.5l-4 14m-2-5l-4-4l4-4m8 12l4-4l-4-4" />
                 </svg>
             </div>
-            <span class="lbtn" id="btn-tasktitle">New Task</span>
+            <span class="lbtn" id="btn-tasktitle">Preferences</span>
         </div>
 
         </div>
@@ -53,30 +53,51 @@
     </navbar>
 
     <content>
-        <div class="cntr-taskinp" id="cntr-taskinp">
-            <div class="task-form">
-                <form class="taskinp" id="taskinp">
-                    <div id="taskinp-name">
-                        <label>Task Name</label>
-                        <input class="inp-data" id="inp-taskname" type="text" placeholder="task title...">
-                    </div>
-                    <div id="taskinp-for">
-                        <label>For</label>
-                        <input class="inp-data" id="inp-taskfor" type="text" placeholder="for...">
-                        <div id="taskinp-date">
-                            <label>Due Date</label>
-                            <input class="inp-data" id="inp-taskdate" type="date" placeholder="yyyy-mm-dd">
+        <div class="cntr-prefinp" id="cntr-prefinp">
+            <div class="pref-form">
+                <form class="pref" id="prefinp">
+                        <div class="prefinp" id="name">
+                            <label for="name">Username:</label>
+                            <input type="text" id="username" name="username" placeholder="Enter Name">
                         </div>
-                        <div id="taskinp-desc">
-                            <label>Description</label>
-                            <textarea class="inp-txt" id="inp-taskdesc" placeholder="task description..."></textarea>
+                        <div class="prefinp" id="completed">
+                            <label for="completed">Show Completed Tasks?</label>
+                            <input type="checkbox" id="showcompleted" name="completed" value="completed">
                         </div>
-
-                        <div id="taskinp-btns">
-                                <input class="btn" id="inp-tasksubmit" type="submit" value="save">
-                                <input class="btn" id="btn-taskcancel" type="button" value="cancel">
-                                <input class="btn" id="btn-taskcomplete" type="submit" value="comlpete">
-                                <input class="btn" id="btn-taskdelete" type="button" value="delete">
+                        <div class="prefinp" id="overdue">
+                            <label for="overdue">Show Overdue Tasks?</label>
+                            <input type="checkbox" id="showoverdue" name="overdue" value="overdue">
+                        </div>
+                        <div class="prefinp" id="backup">
+                            <label for="backup">Save Backups?</label>
+                            <input type="checkbox" id="dobackup" name="backup" value="baclp">
+                        </div>
+                        <div class="prefinp" id="notify">
+                            <label for="notify">Allow Notifications?</label>
+                            <input type="checkbox" id="shownotify" name="notify" value="notify">
+                        </div>
+                        <div class="prefinp" id="interval">
+                            <label for="interval">Notification Interval:</label>
+                            <input type="text" id="notifinterval" name="interval" value="60">
+                        </div>
+                        <div class="prefinp" id="time-from">
+                            <label for="time">Active From</label>
+                            <input type="time" id="timefrom" name="timefrom" placeholder="from" required>
+                        </div>
+                        <div class="prefinp" id="time-to">
+                            <label for="timeto">Active Until</label>
+                            <input type="time" id="timeto" name="timeto" placeholder="to" required>
+                        </div>
+                        <div class="prefinp" id="import">
+                            <label for="import">Import Tasks</label>
+                            <input type="button" id="import" name="import" value="import">
+                        </div>
+                        <div class="prefinp" id="export">
+                            <label for="export">Export Tasks</label>
+                            <input type="button" id="export" name="export" value="export">
+                        </div> 
+                        <div class="prefinp" id="save">
+                            <input type="submit" id="save" name="save" value="save">
                         </div>
                 </form>
             </div>
