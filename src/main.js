@@ -123,20 +123,16 @@ ipcMain.on("form-open", (e, heading) => {               // open form window
     heading = heading.replace(/-/g, " ")                // replace hyphens with spaces
     data = store.getTask(heading)                       // get task data from store
   }
-
   if (!store.taskExists(heading) && heading != undefined) {                  
     log("task does not exist")                          // if data or headng is undefined
     return                                              // return               
   }
-  
-  let form = renderer.createForm()                      // create form window
-  
+  let form = renderer.createForm()                      // create form window 
   if (form == undefined) {                              // if form akready exists/undefined,
     log("heading is undefined")                         // send error
     e.sender.send("error", "You cant open more than one form at a time")
     return                                              // return
   }
-  
   form.on("ready-to-show", () => {                      // when form is ready to show,
     if (heading) {                                      // if heading is passed,
       form.webContents.send("form-init", data)          // send data to form
@@ -182,6 +178,11 @@ ipcMain.on("import-open", (e) => {                      // open import window
 ipcMain.on("pref-open", (e) => {                        // on open preferences window
   log("pref-open", locale)
   let pref = renderer.createPref()                      // initialize preferences window
+  if (pref == undefined) {                              // if preferences window already exists,
+    log("preferences already open", locale)             // send error
+    e.sender.send("error", "You cant open more than one preferences window at a time")
+    return                                              // return
+  }
   pref.on("ready-to-show", () => {                      // when ready, send preference data
     pref.webContents.send("pref-init", store.preferences)
   })

@@ -1,8 +1,8 @@
 {
-  "name": "begginer",
-  "productName": "begginer",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "name": "taskapp",
+  "productName": "TaskApp",
+  "version": "1.0.1",
+  "description": "ElectronJS app to manage tasks",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -24,7 +24,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "begginer"
+            "name": "TaskApp"
           }
         },
         {
@@ -49,8 +49,6 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
     "os-utils": "^0.0.14",
-    "request": "^2.88.2",
-    "sqlite3": "^4.2.0",
     "trim-newlines": ">=3.0.1"
   },
   "devDependencies": {
