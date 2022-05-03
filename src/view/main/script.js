@@ -120,7 +120,7 @@ ipcRenderer.on("init", (e, data) => {
             ipcRenderer.send("notify")
         }
     },
-        data.notify.interval * 6000)
+        data.notify.interval * 60000)
 })
 
 ipcRenderer.on("error", (e, data) => {
@@ -135,6 +135,7 @@ ipcRenderer.on("notify-r", (e, data) => {
     })
     notify.onclick = () => {
         log("notify clicked")
+        ipcRenderer.send("focus")
     }
 })
 

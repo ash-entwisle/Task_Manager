@@ -1,39 +1,30 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const { BrowserWindow } = require('electron');                                      // import BrowserWindow
+const path = require('path');                                                       // import path                                            
+const log = require('../logger/logger').log                                         // import log function
+let locale = "renderer"                                                             // set locale
 
-const log = require('../logger/logger').log
-let locale = "renderer"
 
-// tenplate window create function
-function windowTemplate(win, width, height, hidden) {
-    // Create the browser window.   
-    if (BrowserWindow.getAllWindows().length > 1) {
-        return
-    } 
-    let window = new BrowserWindow({ 
-        width: width, height: height, minWidth: width, minHeight: height,
-        webPreferences: { nodeIntegration: true, contextIsolation: false },
-        autoHideMenuBar: true, frame: false, show: hidden
+function windowTemplate(win, width, height, hidden) {                               // create a window template                
+    if (BrowserWindow.getAllWindows().length > 1) {return}                          // if there are already windows open, return
+    let window = new BrowserWindow({                                                // create a new window                      
+        width: width, height: height, minWidth: width, minHeight: height,           // set the width and height, and min width and height
+        webPreferences: { nodeIntegration: true, contextIsolation: false },         // set the webPreferences
+        autoHideMenuBar: true, frame: false, show: hidden                           // set the autoHideMenuBar, frame, and show
     });
-    // load html
-    window.loadFile(path.join(__dirname, `../../view/${win}/index.html`));
-    // window on events
-    window.on('closed', () => { window = null; log(`${win} closed`, locale) });
-    window.on('ready-to-show', () => { log(`${win} ready`, locale) });
-    // log and return window
+    window.loadFile(path.join(__dirname, `../../view/${win}/index.html`));          // load the html file
+    window.on('closed', () => { window = null; log(`${win} closed`, locale) });     // on window closed, set window to null
+    window.on('ready-to-show', () => { log(`${win} ready`, locale) });              // on window ready, log ready
     log(`window created: ${win}`, locale)
-    return window;
+    return window;                                                                  // return the window          
 }
 
-// functions to create windows based on template above
-
-function createForm() {return windowTemplate("form", 600, 400, true)}
-function createSplash() {return windowTemplate("preload", 400, 200, true);}
-function createMain() {return windowTemplate("main", 800, 650, false);};
-function createPref() {return windowTemplate("preferences", 600, 500, true);}
+function createForm() {return windowTemplate("form", 600, 400, true)}               // template for the form window
+function createSplash() {return windowTemplate("preload", 400, 200, true);}         // template for the splash window
+function createMain() {return windowTemplate("main", 800, 650, false);};            // export the window templates
+function createPref() {return windowTemplate("preferences", 600, 500, true);}       // export the window templates
 
 
-module.exports = { createMain, createForm, createSplash, createPref }
+module.exports = { createMain, createForm, createSplash, createPref }               // export the window templates
 
 
 

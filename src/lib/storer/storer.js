@@ -1,144 +1,115 @@
-const Store = require('electron-store');
+const Store = require('electron-store');                                    // import store
+const jsoner = require('./jsoner');                                         // import jsoner
+const schema = require('./schemer').schema;                                 // import schema
+const date = require('../timer/timer').getFormatDate;                       // import date
+const log = require('../logger/logger').log;                                // import log function
+locale = "storer";                                                          // set the locale
 
-const jsoner = require('./jsoner');
-const schema = require('./schemer').schema;
-const date = require('../timer/timer').getFormatDate;
-const log = require('../logger/logger').log;
-locale = "storer";
-
-
-
-class DataStore extends Store {
-    constructor() {
-        super(schema())
-        this.tasks = this.get('tasks') || []
-        this.preferences = this.get('preferences') || {
+class DataStore extends Store {                                             // extent Store to add functions
+    constructor() {super(schema())                                          // call super constructor
+        this.tasks = this.get('tasks') || []                                // set tasks to store tasks or empty array
+        this.preferences = this.get('preferences') || {                     // set preferences to store preferences or default preferences
             name: "", showCompleted: false, showOverdue: false, backup: true,
             notify:  {enabled: true, onStartup: true, interval: 60, from: "0800", to: "1700" }
         }
-
-        this.save()
+        this.save()                                                         // save store
     }
 
-    // set store to object if it fits the schema
-    importStore(path) {
+    importStore(path) {                                                     // import store from path
         log("importing store", locale)
-        let obj = jsoner.importJSON(path)
-        try {
-            this.preferences = obj.preferences
-            this.tasks = obj.tasks
-        } catch (err) {
-            log("override failed", locale)
+        let obj = jsoner.importJSON(path)                                   // get json object
+        try {                                                               // try,
+            this.preferences = obj.preferences                              // set preferences
+            this.tasks = obj.tasks                                          // set tasks
+        } catch (err) {                                                     // if err,
+            log("override failed", locale)                                  // log override failed
         }
-        this.save()
+        this.save()                                                         // save store
     }
 
-    // export store to path as json with a file name
-    exportStore(path) {
-        log("exporting store", locale)
+    exportStore(path) {                                                     // export store to path
+        log("exporting store", locale)                                      // send data to jsoner to export
         jsoner.exportJSON(path, {preferences: this.preferences, tasks: this.tasks})
     }
 
-    // save tasks
-    save() {
-        //log("saving tasks", locale)
-        this.set('tasks', this.tasks)
-        this.set('preferences', this.preferences)
+    save() {                                                                // save store
+        this.set('tasks', this.tasks)                                       // set tasks to store tasks
+        this.set('preferences', this.preferences)                           // set preferences to store preferences
     }
 
-    // get all tasks
-    getTasks() {
+    getTasks() {                                                            // get tasks
         log("getting all tasks", locale)
-        // sort all tasks in ascending order by due date formatted as YYYY-MM-DD
-        this.tasks = this.tasks.sort((a, b) => {
-            return new Date(a.dueDate) - new Date(b.dueDate)
-        })  || []
-        return this.tasks
+        this.tasks = this.tasks.sort((a, b) => {                            // sort tasks...
+            return new Date(a.dueDate) - new Date(b.dueDate)                // by due date
+        })  || []                                                           // or set tasks to empty array
+        return this.tasks                                                   // return tasks
     }
 
-    // get task index by title
-    getTaskIndex(title) {
-        log("getting task index by title", locale)
-        return this.tasks.findIndex(task => task.heading === title)
+    getTaskIndex(title) {                                                   // get task index
+        log("getting task index by title", locale)      
+        return this.tasks.findIndex(task => task.heading === title)         // return index of task with heading
     }
 
-    // check if task exists
-    taskExists(title) {
+    taskExists(title) {                                                     // check if task exists
         log("checking if task exists", locale)
-        return  this.tasks.find(t => t.heading === title)
+        return  this.tasks.find(t => t.heading === title)                   // return true if task exists
     }
 
-    // get task by title
-    getTask(title) {
+    getTask(title) {                                                        // get task
         log("getting task by title - " + title, locale)
-        return this.get('tasks').find(task => task.heading === title)
+        return this.get('tasks').find(task => task.heading === title)       // return task with heading
     }
 
-    // add task
-    addTask(task) {
+    addTask(task) {                                                         // add task
         log("adding task", locale)
-        if (!this.taskExists(task.heading)) {
-            this.tasks.push(task)
-        } else {
-            this.updateTask(task)
-        }
-        this.save()
+        if (!this.taskExists(task.heading)) {this.tasks.push(task)}         // if task doesn't exist, add task
+        else {this.updateTask(task)}                                        // else update task
+        this.save()                                                         // save store
     }
 
-    // update task
-    updateTask(task, heading) {
+    updateTask(task, heading) {                                             // update task 
         log("updating task", locale)
-        // update task from store if there is a task with the same heading
-        if (this.taskExists(heading)) {
-            let index = this.getTaskIndex(heading)
-            this.tasks[index] = task
-        } else {
-            this.addTask(task)
-        }
-        this.save()
+        if (this.taskExists(heading)) {                                     // if task exists
+            let index = this.getTaskIndex(heading)                          // get index of task
+            this.tasks[index] = task                                        // update task
+        } else {this.addTask(task)}                                         // else add task
+        this.save()                                                         // save store
     }
 
-    // delete task
-    deleteTask(heading) {
+    deleteTask(heading) {                                                   // delete task
         log("deleting task", locale)
-        if (this.taskExists(heading)) {
-            const index = this.tasks.findIndex(t => t.heading === heading)
-            this.tasks.splice(index, 1)   
+        if (this.taskExists(heading)) {                                     // if task exists
+            const index = this.tasks.findIndex(t => t.heading === heading)  // get index of task
+            this.tasks.splice(index, 1)                                     // remove task
         }
-        this.save()
+        this.save()                                                         // save store
     }
 
-    // check if task is completed
-    isCompleted(heading) {
+    isCompleted(heading) {                                                  // check if task is completed
         log("checking if task is completed", locale)
-        return this.getTask(heading).completed
+        return this.getTask(heading).completed                              // return true if task is completed
     }
 
-    // complete task
-    completeTask(heading) {
+    completeTask(heading) {                                                 // complete task
         log("completing task", locale)
-        this.getTask(heading).completed = true
-        this.save()
+        this.getTask(heading).completed = true                              // set task to completed
+        this.save()                                                         // save store
     }
 
-    // check if task is overdue
-    isOverdue(data) {
-        log("checking if task is overdue", locale)
-        let overdue = data.dueDate < date()
-        data.overdue = overdue
-        this.updateTask(data, data.heading)
-        this.save()
-        return data
+    isOverdue(data) {                                                       // check if task is overdue
+        log("checking if task is overdue", locale)  
+        let overdue = data.dueDate < date()                                 // check if due date is before today
+        data.overdue = overdue                                              // set overdue to true if overdue
+        this.updateTask(data, data.heading)                                 // update task
+        this.save()                                                         // save store
+        return data                                                         // return task
     }
 
-    updatePreferences(preferences) {
-        this.preferences = preferences
-        this.save()
+    updatePreferences(preferences) {                                        // update preferences
+        this.preferences = preferences                                      // set preferences to preferences
+        this.save()                                                         // save store
     }
-
 }
 
 
-module.exports = {
-    DataStore
-}
+module.exports = { DataStore }                                              // export store

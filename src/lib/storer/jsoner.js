@@ -1,45 +1,23 @@
-let path = require('path')
-let fs = require('fs')
-const log= require('../logger/logger').log
-const locale = "JSON"
+let fs = require('fs')                                      // import fs
+const log= require('../logger/logger').log                  // import log function
+const locale = "JSON"                                       // set the locale
 
-
-function exportJSON (path, obj) {
-    try {
-        fs.writeFileSync(path, JSON.stringify(obj))
-    } catch (error) {
-        console.log(error)
-        log("error in exporting object to json", locale)
-    }
-
-}
-
-function importJSON (targetPath) {
-    try {
-        let data = fs.readFileSync(targetPath)
-        return JSON.parse(data)
-    } catch (error) {
-        log("error in importing json", locale)
+function exportJSON (path, obj) {                           // export the json
+    try {                                                   // try,
+        fs.writeFileSync(path, JSON.stringify(obj))         // write the json to the file
+    } catch (error) {                                       // if err    
+        log("error in exporting object to json", locale)    // log the error
     }
 }
 
-module.exports = {
-    exportJSON, importJSON
+function importJSON (targetPath) {                          // import the json
+    try {                                                   // try,
+        let data = fs.readFileSync(targetPath)              // read the file
+        return JSON.parse(data)                             // return parsed json
+    } catch (error) {                                       // if err      
+        log("error in importing json", locale)              // log the error
+    }
 }
 
-/*
+module.exports = {  exportJSON, importJSON }                // export the functions
 
-json data held in an object. 
-object will export to .
-[
-    "heading": "some random task"
-    "for": "some random person"
-    "description": "complete NEA"
-    "dueDate": "yyyy/mm/dd"
-    "setDate": "yyyy/mm/dd"
-    "completed": False
-
-
-]
-
-*/

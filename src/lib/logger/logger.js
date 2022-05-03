@@ -1,5 +1,5 @@
-const fs = require('fs')
-const time = require('../timer/timer')
+const fs = require('fs')                                                // import fs
+const time = require('../timer/timer')                                  // import time                   
 
 // log function
 function log(action, locale) {
@@ -10,4 +10,4 @@ function log(action, locale) {
     console.log(data)                                                   // log the data to the console
 };
 
-module.exports = { log }
+module.exports = { log }                                                // export the log function
