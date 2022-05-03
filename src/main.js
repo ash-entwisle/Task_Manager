@@ -183,6 +183,7 @@ ipcMain.on("form-open", (e, heading) => {
   
 })
 
+// err heres
 ipcMain.on("export-open", (e) => {
   log("export-open", locale)
   // open save dialog
@@ -194,11 +195,13 @@ ipcMain.on("export-open", (e) => {
     ]
   }).then(result => {
     if (result) {
+      console.log(result)
       // export store to file
       if (result.canceled) {
         log("export canceled", locale)
       } else {
         log("export successful", locale)
+        e.sender.send("export-r")
         store.exportStore(result.filePath)
       }
     }
@@ -219,6 +222,7 @@ ipcMain.on("import-open", (e) => {
       log("import canceled", locale)
     } else {
       log("import successful", locale)
+      e.sender.send("import-r")
       store.importStore(result.filePaths[0])
     }}
     refreshTasks()
@@ -260,7 +264,4 @@ ipcMain.on("notify", (e) => {
 ipcMain.on("log", (e, data, locale) => {
   log(data, locale)
 })
-
-
-
 

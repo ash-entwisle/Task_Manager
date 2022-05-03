@@ -96,8 +96,10 @@ btnexport.addEventListener("click", () => {
     if (confirm("Export preferences?")) {
         log("exporting pref data")
         ipcRenderer.send("export-open")
-        ipcRenderer.send("form-close")
-        ipcRenderer.send("win-close")
+        ipcRenderer.on("export-r", (e, data) => {
+            ipcRenderer.send("form-close")
+            ipcRenderer.send("win-close")
+        })
     } else {
         e.preventDefault()
     }
@@ -108,8 +110,10 @@ btnimport.addEventListener("click", () => {
     if (confirm("Import preferences?")) {
         log("importing pref data")
         ipcRenderer.send("import-open")
-        ipcRenderer.send("form-close")
-        ipcRenderer.send("win-close")
+        ipcRenderer.on("import-r", (e, data) => {
+            ipcRenderer.send("form-close")
+            ipcRenderer.send("win-close")
+        })
     } else {
         e.preventDefault()
     }   
