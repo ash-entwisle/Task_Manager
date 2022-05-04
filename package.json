@@ -1,7 +1,7 @@
 {
   "name": "taskapp",
   "productName": "TaskApp",
-  "version": "1.0.1",
+  "version": "1.2.1",
   "description": "ElectronJS app to manage tasks",
   "main": "src/main.js",
   "scripts": {
@@ -9,7 +9,25 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "ebuild": "electron-builder"
+  },
+  "build": {
+    "appId": "TaskApp",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "./src/assets/app.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "installerIcon": "./src/assets/app.ico",
+      "uninstallerIcon": "./src/assets/app.ico",
+      "uninstallDisplayName": "Uninstall TaskApp",
+      "license": "./LICENCE.md",
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "keywords": [],
   "author": {
@@ -58,6 +76,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
     "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "electron": "^16.2.2",
+    "electron-builder": "^23.0.3",
     "trim-newlines": ">=3.0.1"
   }
 }

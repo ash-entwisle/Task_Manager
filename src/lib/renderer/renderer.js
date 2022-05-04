@@ -9,7 +9,8 @@ function windowTemplate(win, width, height, hidden) {                           
     let window = new BrowserWindow({                                                // create a new window                      
         width: width, height: height, minWidth: width, minHeight: height,           // set the width and height, and min width and height
         webPreferences: { nodeIntegration: true, contextIsolation: false },         // set the webPreferences
-        autoHideMenuBar: true, frame: false, show: hidden                           // set the autoHideMenuBar, frame, and show
+        autoHideMenuBar: true, frame: false, show: hidden,
+        icon: path.join(__dirname, "../../assets/app.ico" )                         // set the autoHideMenuBar, frame, and show
     });
     window.loadFile(path.join(__dirname, `../../view/${win}/index.html`));          // load the html file
     window.on('closed', () => { window = null; log(`${win} closed`, locale) });     // on window closed, set window to null

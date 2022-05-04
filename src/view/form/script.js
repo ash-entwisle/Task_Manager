@@ -47,7 +47,7 @@ function closeForm() {
         ipcRenderer.send("win-close")
         ipcRenderer.send("form-close")
         return true
-    } 
+    }
 }
 
 function getFormData(complete = false) {
@@ -61,9 +61,9 @@ function getFormData(complete = false) {
         completed: complete
     }
 
-    
-    
-    
+
+
+
     // make sure setdate and header are not empty
     if (data.heading === "" || data.heading === undefined || data.setDate === "" || data.setDate === undefined) {
         alert("Please enter a task name and set a due date")
@@ -80,7 +80,7 @@ function getFormData(complete = false) {
         alert("Task due date cannot be in the past")
         return
     }
-    
+
     return data
 }
 
@@ -109,7 +109,7 @@ function submitForm(complete = false) {
                 ipcRenderer.send("form-close")
                 ipcRenderer.send("win-close")
             } else {
-                return 
+                return
             }
         }
     })
@@ -158,7 +158,7 @@ deltask.addEventListener("click", () => {
             ipcRenderer.send("form-close")
             ipcRenderer.send("win-close")
         }
-    } 
+    }
 })
 
 cmptask.addEventListener("click", (e) => {
@@ -173,7 +173,7 @@ cmptask.addEventListener("click", (e) => {
 // show/hide task input (and other keybinds)
 
 document.addEventListener("keydown", (e) => {
-   // log the current key
+    // log the current key
 
 })
 

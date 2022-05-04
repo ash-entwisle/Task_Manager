@@ -55,7 +55,7 @@ navbar {
     height: auto;
     background-color: var(--Bar);
     width: 100%;
-    padding: 0%;
+    padding: 1px;
     margin: 0%;
     left: 0%;
 }
@@ -65,7 +65,8 @@ navbar .icon {
     float: left;
     -webkit-app-region: drag;
     -webkit-user-select: none;
-    color: var(--Disabled)
+    color: var(--Disabled);
+    padding-right: 10px
 }
 navbar .btn{
     -webkit-app-region:no-drag;
@@ -74,7 +75,7 @@ navbar .btn{
     height: auto;
     width: var(--bar-btn-width);
     padding-left: 10px;
-    padding-right: 5px;
+    padding-right: 10px;
     
     border: none;
     outline: none;

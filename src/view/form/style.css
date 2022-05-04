@@ -87,7 +87,7 @@ navbar .btn {
 navbar .lbtn {
     -webkit-app-region: no-drag;
     float: left;
-    top:50%;
+    top: 50%;
     padding-top: 2px;
 
     height: 100%;
@@ -140,7 +140,8 @@ content {
     text-align: left;
 }
 
-content .cntr-taskinp {/*
+content .cntr-taskinp {
+    /*
     position: absolute;
     width: 95%;
     height: 95%;
@@ -264,8 +265,13 @@ content .taskinp input .inp-close {
     text-align: right;
 }
 
-content #btn-taskdelete {display: none;}
-content #btn-taskcomplete {display: none;}
+content #btn-taskdelete {
+    display: none;
+}
+
+content #btn-taskcomplete {
+    display: none;
+}
 
 content input:hover {
     cursor: pointer;
