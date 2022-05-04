@@ -1,192 +1,115 @@
-const minmax = document.getElementById("btn-minmax")
-const reduce = document.getElementById("btn-reduce")
-const closeapp = document.getElementById("btn-closeapp")
-const closeform = document.getElementById("inp-taskclose")
-const newbtn = document.getElementById("btn-new")
-const cogbtn = document.getElementById("btn-cog")
+const minmax = document.getElementById("btn-minmax")                    // minmax button
+const reduce = document.getElementById("btn-reduce")                    // reduce button
+const closeapp = document.getElementById("btn-closeapp")                // close app button
+const newbtn = document.getElementById("btn-new")                       // new button
+const cogbtn = document.getElementById("btn-cog")                       // cog button
 
-const { ipcRenderer, BrowserWindow, ipcMain, dialog } = require("electron")
-const fs = require("fs")
-const { format } = require("path")
+const { ipcRenderer } = require("electron")                             // import ipcRenderer
+const locale = "win-main-script";                                       // locale
+const timer = require("../../lib/timer/timer");                         // import timer
 
-//const DataStore = require("../../lib/storer/storer").DataStore;
-//const store = new DataStore();
-const getSplash = require("../../lib/splasher/splasher.js").getSplash;
-const locale = "win-main-script";
-const timer = require("../../lib/timer/timer");
 
-// misc formatting functions
+// ===== Miscellaneous =====
 
-function log(data, locale) {
-    ipcRenderer.send("log", data, locale);
-}
+function log(data, locale) {ipcRenderer.send("log", data, locale);}     // log to main process
 
-function addSpaces(str) {
-    // replace "-" with " "
-    return str.replace(/-/g, " ")
-}
+function addSpaces(str) {return str.replace(/-/g, " ")}                 // add spaces to string
 
-function err(msg) {
-    log("notify")
-    const notify = new Notification("Error:", {
-        body: msg,
-        requireInteraction: false
+function err(msg) {                                                     // error message
+    log("notify")       
+    const notify = new Notification("Error:", {                         // create notification
+        body: msg, requireInteraction: false                            // set data
     })
-    notify.onclick = () => {
-        log("notify clicked")
-    }
 }
 
 
+// ===== Button Events =====
 
-   
-
-// basic window functions
-
-
-closeapp.addEventListener("click", () => {
+closeapp.addEventListener("click", () => {                              // close app button
     log("\"closeapp\" was clicked")
-    ipcRenderer.send("app-close")
+    ipcRenderer.send("app-close")                                       // send close app event
 })
 
-reduce.addEventListener("click", () => {
+reduce.addEventListener("click", () => {                                // reduce button
     log("window reduced")
-    ipcRenderer.send("app-reduce")
+    ipcRenderer.send("app-reduce")                                      // send reduce event
 })
 
-minmax.addEventListener("click", () => {
+minmax.addEventListener("click", () => {                                // minmax button
     log("window minmaxed")
-    ipcRenderer.send("app-minmax")
+    ipcRenderer.send("app-minmax")                                      // send minmax event
 })
 
-newbtn.addEventListener("click", () => {
+newbtn.addEventListener("click", () => {                                // new button
     log("opening form from btn")
-    ipcRenderer.send("form-open")
+    ipcRenderer.send("form-open")                                       // send open form event
 })
 
-cogbtn.addEventListener("click", () => {
+cogbtn.addEventListener("click", () => {                                // cog button
     log("opening preferences from btn")
-    ipcRenderer.send("pref-open")   
+    ipcRenderer.send("pref-open")                                       // send open pref event
 })
 
-
-
-// show/hide task input (and other keybinds)
-
-document.addEventListener("keydown", (e) => {
-    // log(`keydown: ${e.keyCode}`, locale)
-    // listen for CTRL+N and then show the new task form
-    if (e.ctrlKey && e.keyCode === 78) {
+document.addEventListener("keydown", (e) => {                           // keydown event
+    if (e.ctrlKey && e.keyCode === 78) {                                // if CTRL+N
         log("CTRL+N pressed", locale)
-        ipcRenderer.send("form-open")
+        ipcRenderer.send("form-open")                                   // send open form event
                 
-    }
-
-    // on ctrl shift e, open export window
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 69) {
+    }/*
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 69) {                  // if CTRL+SHIFT+E
         log("CTRL+SHIFT+E pressed", locale)
-        ipcRenderer.send("export-open")
-    }
-
-    // on ctrl shift o, open import window
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 88) {
+        ipcRenderer.send("export-open")                                 // send open export event
+    }*/ /*
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 88) {                  // if CTRL+SHIFT+X
         log("CTRL+SHIFT+O pressed", locale)
-        ipcRenderer.send("import-open")
-    }
-
-    // on ctrl shift  p , open preferences window
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 80) {
+        ipcRenderer.send("import-open")                                 // send open import event
+    }*/
+    if (e.ctrlKey && e.shiftKey && e.keyCode === 80) {                  // if CTRL+SHIFT+P
         log("CTRL+SHIFT+P pressed", locale)
-        ipcRenderer.send("pref-open")
+        ipcRenderer.send("pref-open")                                   // send open pref event
     }
-
-    
 })
 
-
-// IPC commands
-
-ipcRenderer.on("init", (e, data) => {
-    log("\"init\" was received")
-    log(`notify: ${data.notify.enabled} from: ${data.notify.from} to: ${data.notify.to}`, locale)
-
-    if (data.notify.enabled) {
-        ipcRenderer.send("notify");
+document.addEventListener("dblclick", (e) => {                          // dblclick event
+    let heading = addSpaces(e.target.id);                               // get heading
+    log(`looking for ${heading}`, locale)                               // checkif heading is found
+    if (heading === "" || heading === undefined || heading === null || heading === "undefined" || heading === "null") {
+        return                                                          // if not found, return
     }
-
-    setInterval(() => {
-        let now = timer.getFormatTime();
-        if (now >= data.notify.from && now <= data.notify.to && data.notify.enabled) {
-            ipcRenderer.send("notify")
-        }
-    },
-        data.notify.interval * 60000)
+    log(`"opening form: ${heading}"`)
+    ipcRenderer.send("form-open", heading)                              // send open form event 
+    heading = null                                                      // clear heading
 })
 
-ipcRenderer.on("error", (e, data) => {
-    err(data)    
+
+// ===== IPC Events =====
+
+ipcRenderer.on("init", (e, data) => {                                   // init event
+    log("\"init\" was received")                                        // 
+    if (data.notify.enabled) {                                          // if notify is enabled
+        ipcRenderer.send("notify");                                     // send notify event
+        setInterval(() => {                                             // start timer   
+            let now = timer.getFormatTime();                            // get time
+            if (now >= data.notify.from && now <= data.notify.to && data.notify.enabled) {
+                ipcRenderer.send("notify")                              // if time is between from and to, send notify event
+            }},  data.notify.interval * 60000                           // wait for interval minutes
+        )
+    }
 })
 
-ipcRenderer.on("notify-r", (e, data) => {
+
+ipcRenderer.on("error", (e, data) => {err(data)})                       // error event
+
+ipcRenderer.on("notify-r", (e, data) => {                               // on notify received
     log("notify time")
-    const notify = new Notification("Notification:", {
+    const notify = new Notification("Notification:", {                  // create notification
         body: `Hey ${data.name}! You have ${data.incomplete} tasks to complete and ${data.overdue} tasks overdue.`,
         requireInteraction: false
     })
-    notify.onclick = () => {
+    notify.onclick = () => {                                            // on click
         log("notify clicked")
-        ipcRenderer.send("focus")
+        ipcRenderer.send("focus")                                       // send focus event
     }
 })
 
-
-// checks if anything but the form is clicked, then toggles the form
-
-document.addEventListener("click", (e) => {
-    let target = e.target.id;
-    //console.log(target)
-})
-
-// checks for any doubleclicks on a task and then opens the form for editing
-
-document.addEventListener("dblclick", (e) => {
-    console.log(e.target.id)
-    let heading = addSpaces(e.target.id);
-    log(`looking for ${heading}`, locale)
-    // check if heading is in tasklist
-    if (heading === "" || heading === undefined || heading === null || heading === "undefined" || heading === "null") {
-        return
-    }
-    
-    log(`"opening form: ${heading}"`)
-    ipcRenderer.send("form-open", heading)
-    /*
-    ipcRenderer.send("task-check", heading)
-    ipcRenderer.on("task-check-r", (e, check) => {
-        if (check == true) {
-            log("getting heading " + heading, locale)
-            // open form with heading
-            ipcRenderer.send("form-open", heading)
-        } else {
-            log("task does not exist", locale)
-        }
-    })*/
-    // clear heading
-    heading = null
-})
-
-
-
-// ipc test function (pingpong)
-
-ipcRenderer.on("test", (e, data) => {
-    log("test", locale)
-    console.log(data)
-});
-
-
-
-// if pref.notify.enabled is true, then show a notification every pref.notify.interval
-// from the pref.notify.start time to the pref.notify.end time
-
-// check time every min or so, and if it's within the notify time, then show a notification and wait interva
+ipcRenderer.on("test", (e, data) => {console.log(data)});               // test event

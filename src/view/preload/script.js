@@ -1,22 +1,17 @@
-// get "load" and "splash" elements
-let load = document.getElementById("load")
-let splash = document.getElementById("splash")
-// import IPC and splash
-const { ipcRenderer } = require("electron")
-const getSplash = require("../../lib/splasher/splasher.js").getSplash;
+const { ipcRenderer } = require("electron")                                 // import ipcRenderer
+const getSplash = require("../../lib/splasher/splasher.js").getSplash;      // get splash
 
-// log function
-function log(data) {
-    ipcRenderer.send("log", data, "win-load-script");
-}
+let splash = document.getElementById("splash")                              // get splash
+let load = document.getElementById("load")                                  // get load
 
-// change splash text to getSplash() every x ammount of time
-splash.innerHTML = getSplash();
-const splashInterval = setInterval(() => {splash.innerHTML = getSplash();
+function log(data) {ipcRenderer.send("log", data, "win-load-script");}      // log to main process
+
+splash.innerHTML = getSplash();                                             // initialize splash
+
+const splashInterval = setInterval(() => {splash.innerHTML = getSplash();   // every 2 seconds, update splash
 }, 2000);
 
-// animate the ... in load
-const loadInterval = setInterval(() => {
-    if (load.innerHTML == "Loading...") {load.innerHTML = "Loading";} 
-    else {load.innerHTML += ".";}
+const loadInterval = setInterval(() => {                                    // every 0.5 seconds, update load
+    if (load.innerHTML == "Loading...") {load.innerHTML = "Loading";}       // animate Loading Loading. Loading.. Loading...
+    else {load.innerHTML += ".";}   
 }, 500);

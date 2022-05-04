@@ -25,7 +25,7 @@
       "installerIcon": "./src/assets/app.ico",
       "uninstallerIcon": "./src/assets/app.ico",
       "uninstallDisplayName": "Uninstall TaskApp",
-      "license": "./LICENCE.md",
+      "license": "LICENSE",
       "allowToChangeInstallationDirectory": true
     }
   },
@@ -34,7 +34,7 @@
     "name": "brit-hakrperson",
     "email": "ash.entwisle@mailfence.com"
   },
-  "license": "DNBAD",
+  "license": "LICENSE",
   "config": {
     "forge": {
       "packagerConfig": {},

@@ -1,56 +1,22 @@
-const submitForm = document.getElementById("inp-tasksubmit")
-const taskinp = document.getElementById("cntr-taskinp")
-
-const { ipcRenderer } = require("electron")
-const fs = require("fs")
-const { format } = require("path")
-
-//const DataStore = require("../../lib/storer/storer").DataStore;
-//const store = new DataStore();
-const getSplash = require("../../lib/splasher/splasher.js").getSplash;
-const locale = "win-main-taskio";
-const time = require("../../lib/timer/timer");
+const { ipcRenderer } = require("electron")                                 // import ipcRenderer
+const locale = "win-main-taskio";                                           // set locale
 
 
+// ===== Misc Functions =====
 
+function log(data) {ipcRenderer.send("log", data, locale);}                 // log to main process
 
-// system funcitons
+function remSpaces(str) {return str.replace(/\s/g, "-")}                    // remove spaces from string
 
-function log(data) {
-    ipcRenderer.send("log", data, locale);
-}
-
-function remSpaces(str) {
-    // replace " " with "-"
-    return str.replace(/\s/g, "-")
-}
-
-function conf() {
-    return confirm("Are you sure?")
-}
-
-
-function notify() {
-    log("notify")
-    const notify = new Notification("Task Added", {
-        body: "Task added to list"
-    })
-    notify.onclick = () => {
-        log("notify clicked")
-    }
-}
-
-
-
-function refreshTasks() {
+function refreshTasks() {                                                   // refresh tasks
     log("refreshing tasks")
-    let taskList = document.getElementById("cntr-tasklist");
-    taskList.innerHTML = "";
-    ipcRenderer.send("task-get-all")
+    let taskList = document.getElementById("cntr-tasklist");                // get task list
+    taskList.innerHTML = "";                                                // clear task list
+    ipcRenderer.send("task-get-all")                                        // send get all tasks event
 }
 
-function formatHTML (data) {
-    let idheading = remSpaces(data.heading);
+function formatHTML (data) {                                                // format html and return
+    let idheading = remSpaces(data.heading);                                // get id heading
     return `
 <div class="task-item" id=${idheading}>
     <div class="task-card" id=${idheading}>
@@ -82,141 +48,47 @@ function formatHTML (data) {
 }
 
 
+// ===== IPC Events =====
 
-
-// delete the corresponding task when the delete button is clicked
-
-
-
-
-// submit form event
-
-submitForm.addEventListener("click", (event) => {
-    event.preventDefault();
-    
-    // get data from form
-    let data = {
-        heading: document.getElementById("inp-taskname").value,
-        whoFor: document.getElementById("inp-taskfor").value,
-        description: document.getElementById("inp-taskdesc").value,
-        setDate: time.getFormatDate(),
-        dueDate: document.getElementById("inp-taskdate").value,
-        completed: false
-    }
-    
-    // send heading to main to check if it exists
-    ipcRenderer.send("task-exists", JSON.stringify(data))
-
-    // on respose from main, if task exists, display a confirmation box to overwrite
-    ipcRenderer.on("task-exists-response", (event, arg) => {
-        if (arg === true) {
-            // task exists, ask to overwrite
-            let overwrite = confirm("Task already exists. Overwrite?")
-            if (!overwrite) {
-                // if not overwriting, exit
-                return
-            }
-        }
-    });
-
-    // loop through datat to check for any blank fields
-    for (let key in data) {
-        if (data[key] === "") {
-            alert("Please fill in all fields")
-            return
-        }
-    }
-    
-    // check if due date is in the past
-    if (new Date(data.dueDate) < new Date()) {
-        alert("Due date cannot be in the past")
-        return
-        
-    }
-    // send data to server
-    ipcRenderer.send("task-edit", JSON.stringify(data));
-    taskinp.style.display = "none";
-});
-
-
-
-// appends a new tasj to the task list
-
-ipcRenderer.on("task-render", (e, data, preferences) => {
+ipcRenderer.on("task-render", (e, data, preferences) => {                   // render tasks
     log(`add-task: ${data.heading}`)
-    let taskList = document.getElementById("cntr-tasklist");
-    // if the data is not overdue AND the task is not completed, add it to the list
-    console.log(data.overdue, data.completed)
-    if (!data.overdue && !data.completed) {
+    let taskList = document.getElementById("cntr-tasklist");                // get task list                       
+    if (!data.overdue && !data.completed) {                                 // if not overdue or completed, add to list
         taskList.innerHTML += `<a class="task-padding" id="${remSpaces(data.heading)}">${formatHTML(data)}</a>`
     }
-    // if the data is overdue, check if preferences are set to show overdue tasks and set the border color to red
-    if (data.overdue && preferences.showOverdue) {
-        log(`overdue task: ${data.heading}`)
+    if (data.overdue && preferences.showOverdue) {                          // if overdue and show overdue
+        log(`overdue task: ${data.heading}`)                                // add to list and set color to red
         taskList.innerHTML += `<a class="task-padding" id="${remSpaces(data.heading)}">${formatHTML(data)}</a>`
         document.getElementById(remSpaces(data.heading)).children[0].children[0].style.borderColor = "#F07178";
     }
-    // if the data is completed, check if preferences are set to show completed tasks and set the border color to green
-    if (data.completed && preferences.showCompleted) {
-        log(`completed task: ${data.heading}`)
+    if (data.completed && preferences.showCompleted) {                      // if completed and show completed
+        log(`completed task: ${data.heading}`)                              // add to list and set color to green
         taskList.innerHTML += `<a class="task-padding" id="${remSpaces(data.heading)}">${formatHTML(data)}</a>`
         document.getElementById(remSpaces(data.heading)).children[0].children[0].style.borderColor = "#98C379";
     }
-
-
-
-    /*
-    if (!data.overdue === preferences.showOverdue && !data.completed === preferences.showCompleted) { 
-        log(`adding task: ${data.heading}`)
-        // get div with a class of task-card
-        console.log(data)
-        if (data.completed) {
-            taskCard.style.borderColor = "#2979ff";
-        }
-        if (data.overdue) {
-            taskCard.style.borderColor = "#F07178";
-        }
-
-    }*/
-    
 });
 
-// edits a task based on heading
-
-ipcRenderer.on("task-update", (e, data) => {
+ipcRenderer.on("task-update", (e, data) => {                                // update task
     log(`editing task: ${data.heading}`)
-    // find a task with the id of data.heading and replace it with the new task
-    let task = document.getElementById(data.heading);
-    task.innerHTML = formatHTML(data);
-    refreshTasks();
+    let task = document.getElementById(data.heading);                       // get task
+    task.innerHTML = formatHTML(data);                                      // update task
+    refreshTasks();                                                         // refresh tasks
 });
 
 
-ipcRenderer.on("task-refresh", (e, data) => {
+ipcRenderer.on("task-refresh", (e, data) => {                               // refresh tasks
     log("update-task-list")
-    refreshTasks()
+    refreshTasks()                                                          // refresh tasks
 });
 
 
+// ===== Initialization =====
 
-// initial functions
-function main() {
+function main() {                                                           // main function
     log("taskIO.js loaded")
-    //notify()
-    refreshTasks();
+    refreshTasks();                                                         // refresh tasks
 }
 
-main();
+main();                                                                     // run main function
 
-
-
-
-/*
-"heading": "some random task"
-"for": "some random person"
-"description": "complete NEA"
-"dueDate": "yyyy/mm/dd"
-"setDate": "yyyy/mm/dd"
-"completed": False
-*/
 
