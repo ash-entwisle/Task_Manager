@@ -64,6 +64,7 @@ function submitForm(complete = false) {                             // submit fo
     log("\"submitForm\" was clicked")   
     let data = getFormData(complete)                                // get form data
     if (data === undefined) {return}                                // return if data is undefined
+    if (oldHeading === "") {oldHeading = data.heading}              // if old heading is empty, overwrite
     ipcRenderer.send("task-check", oldHeading)                      // check if old heading is the same as new heading
     ipcRenderer.on("task-check-r", (e, exists) => {                 // on response,
         if (exists || data.heading == oldHeading) {                 // if task exists or heading is the same as old heading,

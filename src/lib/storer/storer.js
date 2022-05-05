@@ -62,8 +62,7 @@ class DataStore extends Store {                                             // e
 
     addTask(task) {                                                         // add task
         log("adding task", locale)
-        if (!this.taskExists(task.heading)) {this.tasks.push(task)}         // if task doesn't exist, add task
-        else {this.updateTask(task)}                                        // else update task
+        this.tasks.push(task)                                               // add task to tasks
         this.save()                                                         // save store
     }
 
