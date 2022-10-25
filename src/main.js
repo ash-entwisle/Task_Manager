@@ -4,7 +4,7 @@ const store = new DataStore();                                                  
 const renderer = require('./lib/renderer/renderer')                              // import renderer
 const timer = require('./lib/timer/timer')                                       // import timer                  
 const log = require('./lib/logger/logger').log;                                  // import logger            
-let locale = "main";                                                              // set locale
+let locale = "main";                                                             // set locale
 
 
 
