@@ -18,8 +18,8 @@ const ttlwind = document.getElementById("title")                    // title win
 const { ipcRenderer } = require("electron")                         // import ipcRenderer
 const time = require("../../lib/timer/timer");                      // import timer
 
-const locale = "win-form-script";                                   // initialize locale
-let edit = false                                                    // initialize edit mode
+const locale = "win-form-script";                                   // initialise locale
+let edit = false                                                    // initialise edit mode
 let completed = false                                               // assume completed is false
 
 
